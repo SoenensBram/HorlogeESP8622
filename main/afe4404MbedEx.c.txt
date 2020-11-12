@@ -1,0 +1,197 @@
+#include "mbed.h"
+#include "AFE_4404.h"
+ 
+ 
+char LED = 0x2A; // LED2 on AFE4404
+int32_t data;
+volatile bool dataAvailable = false;
+ 
+ 
+AFE_4404::AFE_4404(PinName rxSupplyEn, PinName txSupplyEn, PinName resetz, 
+            PinName powerEn, PinName drdy, PinName clk, PinName sda, PinName scl):
+            
+            _rxSupplyEn(rxSupplyEn), _txSupplyEn(txSupplyEn), _resetz(resetz), 
+            _powerEn(powerEn), _drdy(drdy), _clk(clk), _i2c(sda, scl) {
+                // inputs: 
+                // rxSupplyEn, txSuppyEn, and powerEn: digital outputs (active low) used to 
+                // turn on the power supplies in the manner described in the datasheet
+                // resetz: used to reset the AFE after power up (active low)
+                // drdy:  interrupt from AFE when data is ready
+                // clk:    pwm output at ~ 4.1MHz
+                // sda, scl: I2C data and clock, respectively;
+       
+       // shift by 1 for 8-bit representation of 7-bit address
+        _address = (0x58 << 1);
+}
+                
+void AFE_4404::initPorts(void) { 
+        
+        // turn off power supplies
+        _rxSupplyEn   = 0;
+        _txSupplyEn   = 0;
+        _powerEn      = 0;
+        
+        // resetz is active low, so leave on before power supply init
+        _resetz     = 1;
+        
+        // set the clock output to zero before power-up sequence
+        // this convoluted method was required because of the way the the PWM
+        // output is set up (faster that possible with the MBED APIs)
+        _clk.period(10);
+        _clk.write(0);
+        
+        disableIRQ();
+}
+ 
+void AFE_4404::initPowerSupply(void) {
+    
+    wait_ms(100);
+    
+    _powerEn = 1;
+    wait_ms(100);
+    
+    _rxSupplyEn = 1;
+    wait_ms(10);
+    
+    _txSupplyEn = 1;
+    wait_ms(20);
+    
+    _resetz = 0;
+    wait_us(35);
+    
+    _resetz = 1;
+    
+    initClock();
+    wait_ms(2);
+}   
+ 
+uint32_t AFE_4404::readData(uint8_t reg, bool adc = true) {
+    
+    if (!adc) {
+        enableReadMode();
+    }
+    
+    _writeBuffer[0] = reg;  // initialize write buffer with AFE register address
+    
+    // initialize read buffers to 0. probably unnecessary
+    _readBuffer[0] = 0x00;
+    _readBuffer[1] = 0x00;
+    _readBuffer[2] = 0x00;
+    
+    // write the register to AFE and use repeated start mode as specified in
+    // the datasheet
+    _i2c.write(_address, _writeBuffer, 1, true);
+    // read 3 bytes of data from register MSB first
+    _i2c.read(_address, _readBuffer, 3);
+    
+    _tempData = 0;
+    _tempData = (_readBuffer[0] << (BITS_PER_BYTE * 2)) | \
+        (_readBuffer[1] << BITS_PER_BYTE) | _readBuffer[2];
+    
+    if (adc && (SIGN_MASK & _tempData)) {
+        _tempData |= SIGN_EXT;
+    }
+    
+    return _tempData;
+    
+}
+ 
+void AFE_4404::writeData(uint8_t reg, uint32_t data) {
+    
+    enableWriteMode();
+    
+    _writeBuffer[0] = reg;
+    
+    // store the lower 3 bytes of data in _writeBuffer (MSB first)
+    for (int i = 2, j = 1; i >= 0; i--, j++) {
+        _writeBuffer[j] = (data >> (BITS_PER_BYTE * i)) & LOWER_BYTE_MASK;
+    }
+    
+    // write 4 bytes
+    // 1 for the register address and 3 for the lower 3 bytes of data
+    _i2c.write(_address, _writeBuffer, 4);
+    
+}
+ 
+struct Register {
+    uint8_t addr;
+    uint32_t val;
+};
+ 
+void AFE_4404::initRegisters(void) {
+    
+    unsigned char i;
+    struct Register reg[NUM_REGISTERS];
+    reg[0].addr = 0x01; reg[0].val = 0x000050;
+    reg[1].addr = 0x02; reg[1].val = 0x00018F;
+    reg[2].addr = 0x03; reg[2].val = 0x000320;
+    reg[3].addr = 0x04; reg[3].val = 0x0004AF;
+    reg[4].addr = 0x05; reg[4].val = 0x0001E0;
+    reg[5].addr = 0x06; reg[5].val = 0x00031F;
+    reg[6].addr = 0x07; reg[6].val = 0x000370;
+    reg[7].addr = 0x08; reg[7].val = 0x0004AF;
+    reg[8].addr = 0x09; reg[8].val = 0x000000;
+    reg[9].addr = 0x0A; reg[9].val = 0x00018F;
+    reg[10].addr = 0x0B; reg[10].val = 0x0004FF;
+    reg[11].addr = 0x0C; reg[11].val = 0x00063E;
+    reg[12].addr = 0x0D; reg[12].val = 0x000198;
+    reg[13].addr = 0x0E; reg[13].val = 0x0005BB;
+    reg[14].addr = 0x0F; reg[14].val = 0x0005C4;
+    reg[15].addr = 0x10; reg[15].val = 0x0009E7;
+    reg[16].addr = 0x11; reg[16].val = 0x0009F0;
+    reg[17].addr = 0x12; reg[17].val = 0x000E13;
+    reg[18].addr = 0x13; reg[18].val = 0x000E1C;
+    reg[19].addr = 0x14; reg[19].val = 0x00123F;
+    reg[20].addr = 0x15; reg[20].val = 0x000191;
+    reg[21].addr = 0x16; reg[21].val = 0x000197;
+    reg[22].addr = 0x17; reg[22].val = 0x0005BD;
+    reg[23].addr = 0x18; reg[23].val = 0x0005C3;
+    reg[24].addr = 0x19; reg[24].val = 0x0009E9;
+    reg[25].addr = 0x1A; reg[25].val = 0x0009EF;
+    reg[26].addr = 0x1B; reg[26].val = 0x000E15;
+    reg[27].addr = 0x1C; reg[27].val = 0x000E1B;
+    reg[28].addr = 0x1D; reg[28].val = 0x009C3F;
+    reg[29].addr = 0x1E; reg[29].val = 0x000103;
+    reg[30].addr = 0x20; reg[30].val = 0x008003;
+    reg[31].addr = 0x21; reg[31].val = 0x000003;
+    reg[32].addr = 0x22; reg[32].val = 0x000400;
+    reg[33].addr = 0x23; reg[33].val = 0x000000;
+    reg[34].addr = 0x32; reg[34].val = 0x00155F;
+    reg[35].addr = 0x33; reg[35].val = 0x00991F;
+    reg[36].addr = 0x36; reg[36].val = 0x000190;
+    reg[37].addr = 0x37; reg[37].val = 0x00031F;
+ 
+    for (i = 0; i < NUM_REGISTERS; i++) 
+      writeData(reg[i].addr, reg[i].val);
+    
+}
+ 
+void AFE_4404::initClock(void) {
+    
+    LPC_PWM1->TCR = (1 << 1);               // Reset counter, disable PWM
+    LPC_SC->PCLKSEL0 &= ~(0x3 << 12);  
+    LPC_SC->PCLKSEL0 |= (1 << 12);          // Set peripheral clock divider to /1, i.e. system clock
+    LPC_PWM1->MR0 = 22;                     // Match Register 0 is shared period counter for all PWM1
+    LPC_PWM1->MR6 = 11;                      // Pin 21 is PWM output 6, so Match Register 6
+    LPC_PWM1->LER |= 1;                     // Start updating at next period start
+    LPC_PWM1->TCR = (1 << 0) || (1 << 3);   // Enable counter and PWM
+}
+ 
+void AFE_4404::powerUpSequence(void) {
+    
+    initPorts();
+    initPowerSupply();
+    initRegisters();
+    initClock();
+    _drdy.rise(this, &AFE_4404::getData);
+    enableIRQ();
+    
+}
+ 
+void AFE_4404::getData(void) {
+    
+    disableIRQ();  
+    data = static_cast<int32_t> (readData(LED, true));
+    dataAvailable = true;
+    enableIRQ();
+}

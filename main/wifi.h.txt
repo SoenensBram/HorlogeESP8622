@@ -1,0 +1,52 @@
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "esp_log.h"
+#include "esp_netif.h"
+#include "esp_event.h"
+#include "protocol_examples_common.h"
+#include "nvs.h"
+#include "nvs_flash.h"
+#include <netdb.h>
+#include <sys/socket.h>
+
+//class wificonnect{
+//    public:
+//    private:
+        char Server ;//=    "IPADDR";
+        char Port ;//=      "NETWORKPORT";
+        char Url ;//=       "NETURL";
+        static const char *TAG = "example";
+        static const char *REQUEST = "GET IPADDR\r\n Host: WEB_SERVER\r\n User-Agent: esp-idf/1.0 esp32\r\n \r\n";
+        //"GET " WEB_URL "\r\n Host: "WEB_SERVER"\r\n User-Agent: esp-idf/1.0 esp32\r\n \r\n";
+//}
+
+
+
+
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "esp_log.h"
+#include "esp_netif.h"
+#include "esp_event.h"
+#include "protocol_examples_common.h"
+#include "nvs.h"
+#include "nvs_flash.h"
+#include <netdb.h>
+#include <sys/socket.h>
+
+//class wificonnect{
+//    public:
+//    private:
+        static const char *TAG = "example";
+        char
+        Server = "192.168.0.100",
+        Port = "80",
+        Url = "example.com:80/url",
+        RequestPart1 = "GET ",
+        RequestPart2 = "\r\n Host: ",
+        RequestPart3 = "\r\n User-Agent: esp-idf/1.0 esp32\r\n \r\n";
+//}
