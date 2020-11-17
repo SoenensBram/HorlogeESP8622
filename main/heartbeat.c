@@ -119,7 +119,6 @@ static void http_post(void *pvParameters){
 void app_main()
 {
     ESP_ERROR_CHECK(Afe4404PowerUp());
-    ESP_ERROR_CHECK(EspSpo2Data());
     ESP_LOGI(TAG, "Done I2C!");
 
     //ESP_ERROR_CHECK(nvs_flash_init());

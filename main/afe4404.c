@@ -15,10 +15,7 @@
 
 #include "afe4404.h"
  
-static const char *TAG2 = "I2C"; 
-
-
-
+static const char *TAG2 = "AFE4404"; 
 
 
 /**
@@ -148,6 +145,23 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
 }
 
 /**
+ * @brief code for getting and calculating data from AFE4404
+ */
+static void EspSpo2Data(void *arg){
+    //I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
+    uint8_t data1 = 0;
+    uint8_t length = 24;
+    for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
+        if(!WriteableRegister[i]){
+            I2cMasterAfe4404Read(Address[i], data1, length);
+            ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , (uint32_t)data1);
+        }
+    }
+    //I2cMasterAfe4404Write(Address[34], &Value[34] ,3);
+    ESP_LOGI(TAG2, "Done read SPO2!");
+}
+
+/**
  * @brief code for initializing AFE4404 Pins
 Pins Used In Pinout
 Pin 20 GPIO11   RxSupplyEn
@@ -159,8 +173,6 @@ Pin 24 GPIO5    DataReadyInterupt
  *     - ESP_OK Success
  */
 static esp_err_t MasterAfe4404InitializePorts(){
-    ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
-    //ESP_ERROR_CHECK(gpio_intr_enable(DataReadyInterupt));
     ESP_ERROR_CHECK(gpio_set_direction(TxSupplyEnable,GPIO_MODE_DEF_OUTPUT));
     ESP_ERROR_CHECK(gpio_set_direction(RxSupplyEnable,GPIO_MODE_DEF_OUTPUT));
     ESP_ERROR_CHECK(gpio_set_direction(PowerEnable,GPIO_MODE_DEF_OUTPUT));
@@ -170,6 +182,18 @@ static esp_err_t MasterAfe4404InitializePorts(){
     ESP_ERROR_CHECK(gpio_set_level(PowerEnable,0));
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
     ESP_LOGI(TAG2, "Done I2C Ports Init!");
+    return ESP_OK;
+}
+
+static esp_err_t InitInteruptPortDataReady(){
+    ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
+    ESP_ERROR_CHECK(gpio_set_intr_type(DataReadyInterupt,GPIO_INTR_POSEDGE));
+    ESP_ERROR_CHECK(gpio_set_pull_mode(DataReadyInterupt,GPIO_FLOATING));
+    ESP_LOGI(TAG2, "Interupts configured");
+    ESP_ERROR_CHECK(gpio_install_isr_service(0));
+    ESP_LOGI(TAG2, "Interupt service installed");
+    ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
+    ESP_LOGI(TAG2, "Interupts Done!");
     return ESP_OK;
 }
 
@@ -208,23 +232,8 @@ static esp_err_t Afe4404PowerUp(){
     MasterAfe4404InitializePorts();
     Afe4404InitializePowerUp();
     I2cMasterAfe4404InitializeRegister();
+    InitInteruptPortDataReady();
     ESP_LOGI(TAG2, "Done I2C Soft Slave Powerup!");
     return ESP_OK;
 }
 
-/**
- * @brief code for getting and calculating data from AFE4404
- */
-static esp_err_t EspSpo2Data(){
-    uint8_t data1 = 0;
-    uint8_t length = 24;
-    for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
-        if(!WriteableRegister[i]){
-            I2cMasterAfe4404Read(Address[i], data1, length);
-            ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , (uint32_t)data1);
-        }
-    }
-    ESP_LOGI(TAG2, "Done read SPO2!");
-    //code goes here
-    return ESP_OK;
-}
