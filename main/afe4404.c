@@ -141,7 +141,7 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     vTaskDelay(100 / portTICK_RATE_MS);
     I2cMasterInit();
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
-        if(!(i<42&47<i)&i<63)ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
+        if(WriteableRegister[i])ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
     }
     ESP_LOGI(TAG2, "Done I2C InitRegister!");
     return ESP_OK;
@@ -218,22 +218,12 @@ static esp_err_t Afe4404PowerUp(){
 static esp_err_t EspSpo2Data(){
     uint8_t data1 = 0;
     uint8_t length = 24;
-    I2cMasterAfe4404Read(42, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",42 , (uint32_t)data1);
-    I2cMasterAfe4404Read(43, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",43 , (uint32_t)data1);
-    I2cMasterAfe4404Read(44, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",44 , (uint32_t)data1);
-    I2cMasterAfe4404Read(45, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",45 , (uint32_t)data1);
-    I2cMasterAfe4404Read(46, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",46 , (uint32_t)data1);
-    I2cMasterAfe4404Read(47, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",47 , (uint32_t)data1);
-    I2cMasterAfe4404Read(63, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",63 , (uint32_t)data1);
-    I2cMasterAfe4404Read(64, data1, length);
-    ESP_LOGI(TAG2, "sensor_data%d: %d",64 , (uint32_t)data1);
+    for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
+        if(!WriteableRegister[i]){
+            I2cMasterAfe4404Read(Address[i], data1, length);
+            ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , (uint32_t)data1);
+        }
+    }
     ESP_LOGI(TAG2, "Done read SPO2!");
     //code goes here
     return ESP_OK;
