@@ -18941,68 +18941,68 @@ END GROUP
                 0x0000000040104510                . = ALIGN (0x4)
                 0x0000000040104510                _iram_bss_start = ABSOLUTE (.)
  *libcore.a:(.bss .bss.* COMMON)
+ *libfreertos.a:tasks.*(.bss .bss.* COMMON)
+ .bss.uxSchedulerSuspended
+                0x0000000040104510        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xIdleTaskHandle
+                0x0000000040104514        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xNextTaskUnblockTime
+                0x0000000040104518        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.uxTaskNumber
+                0x000000004010451c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xNumOfOverflows
+                0x0000000040104520        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xYieldPending
+                0x0000000040104524        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.uxPendedTicks
+                0x0000000040104528        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xSchedulerRunning
+                0x000000004010452c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.uxTopReadyPriority
+                0x0000000040104530        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xTickCount
+                0x0000000040104534        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.uxCurrentNumberOfTasks
+                0x0000000040104538        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xSuspendedTaskList
+                0x000000004010453c       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.uxDeletedTasksWaitingCleanUp
+                0x0000000040104550        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xTasksWaitingTermination
+                0x0000000040104554       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xPendingReadyList
+                0x0000000040104568       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.pxOverflowDelayedTaskList
+                0x000000004010457c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.pxDelayedTaskList
+                0x0000000040104580        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xDelayedTaskList2
+                0x0000000040104584       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.xDelayedTaskList1
+                0x0000000040104598       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.pxReadyTasksLists
+                0x00000000401045ac      0x12c /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+ .bss.pxCurrentTCB
+                0x00000000401046d8        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
+                0x00000000401046d8                pxCurrentTCB
  *libfreertos.a:impure.*(.bss .bss.* COMMON)
  *libfreertos.a:freertos_hooks.*(.bss .bss.* COMMON)
  *libfreertos.a:timers.*(.bss .bss.* COMMON)
  .bss.xLastTime$4351
-                0x0000000040104510        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046dc        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.xTimerTaskHandle
-                0x0000000040104514        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046e0        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.xTimerQueue
-                0x0000000040104518        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046e4        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.pxOverflowTimerList
-                0x000000004010451c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046e8        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.pxCurrentTimerList
-                0x0000000040104520        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046ec        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.xActiveTimerList2
-                0x0000000040104524       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x00000000401046f0       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  .bss.xActiveTimerList1
-                0x0000000040104538       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
+                0x0000000040104704       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(timers.o)
  *libfreertos.a:event_groups.*(.bss .bss.* COMMON)
- *libfreertos.a:tasks.*(.bss .bss.* COMMON)
- .bss.uxSchedulerSuspended
-                0x000000004010454c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xIdleTaskHandle
-                0x0000000040104550        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xNextTaskUnblockTime
-                0x0000000040104554        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.uxTaskNumber
-                0x0000000040104558        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xNumOfOverflows
-                0x000000004010455c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xYieldPending
-                0x0000000040104560        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.uxPendedTicks
-                0x0000000040104564        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xSchedulerRunning
-                0x0000000040104568        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.uxTopReadyPriority
-                0x000000004010456c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xTickCount
-                0x0000000040104570        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.uxCurrentNumberOfTasks
-                0x0000000040104574        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xSuspendedTaskList
-                0x0000000040104578       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.uxDeletedTasksWaitingCleanUp
-                0x000000004010458c        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xTasksWaitingTermination
-                0x0000000040104590       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xPendingReadyList
-                0x00000000401045a4       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.pxOverflowDelayedTaskList
-                0x00000000401045b8        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.pxDelayedTaskList
-                0x00000000401045bc        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xDelayedTaskList2
-                0x00000000401045c0       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.xDelayedTaskList1
-                0x00000000401045d4       0x14 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.pxReadyTasksLists
-                0x00000000401045e8      0x12c /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
- .bss.pxCurrentTCB
-                0x0000000040104714        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/freertos/libfreertos.a(tasks.o)
-                0x0000000040104714                pxCurrentTCB
  *libfreertos.a:queue.*(.bss .bss.* COMMON)
  *libfreertos.a:list.*(.bss .bss.* COMMON)
  *libfreertos.a:stream_buffer.*(.bss .bss.* COMMON)
@@ -19144,7 +19144,7 @@ END GROUP
 .dram0.bss      0x000000003ffe8560      0xf68
                 0x000000003ffe8560                . = ALIGN (0x8)
                 0x000000003ffe8560                _bss_start = ABSOLUTE (.)
- *(EXCLUDE_FILE(*liblwip.a *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:tasks.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) .bss EXCLUDE_FILE(*liblwip.a *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:tasks.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) .bss.* EXCLUDE_FILE(*liblwip.a *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:tasks.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) COMMON)
+ *(EXCLUDE_FILE(*liblwip.a *libfreertos.a:tasks.* *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) .bss EXCLUDE_FILE(*liblwip.a *libfreertos.a:tasks.* *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) .bss.* EXCLUDE_FILE(*liblwip.a *libfreertos.a:tasks.* *libfreertos.a:impure.* *libfreertos.a:freertos_hooks.* *libfreertos.a:timers.* *libfreertos.a:event_groups.* *libfreertos.a:queue.* *libfreertos.a:list.* *libfreertos.a:stream_buffer.* *libcore.a) COMMON)
  .bss.s_nmi_wd_state
                 0x000000003ffe8560        0x4 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/build/esp8266/libesp8266.a(task_wdt.o)
  .bss.s_reset_reason

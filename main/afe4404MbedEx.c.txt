@@ -195,3 +195,23 @@ void AFE_4404::getData(void) {
     dataAvailable = true;
     enableIRQ();
 }
+
+
+
+
+
+
+
+I2cMasterAfe4404Write(Address[0], 8,3); // 8-> 4th bit = 1. (software reset enabled). 
+								 // 2nd bit -> keep counter in reset mode
+								 // 1st bit -> Register write mode (see datasheet AFE4404 -> REG 0x00h)
+	uint32_t reg_val =0;
+	reg_val = reg_val | (0 << 20);		//	0: Transmitter not pwrd dwn |  1: pwrd dwn in dynamic pwrd-dwn mode 
+	reg_val = reg_val | (1 << 17);		//	0: LED crrnt range 0-50 |   1: range 0-100
+	reg_val = reg_val | (1 << 14);		//	0: ADC not pwrd dwn |  1: ADC pwrd dwn in dynamic pwrd-dwn mode
+	reg_val = reg_val | (1 << 9);		//	0: External Clock (clk pin acts as input in this mode) | 1: Internal Clock (uses 4Mhz internal osc)
+	reg_val = reg_val | (1 << 4);		//	0: TIA not pwrd dwn |  1: TIA pwrd dwn in dynamic pwrd-dwn mode
+	reg_val = reg_val | (0 << 3);		//	0: Rest of ADC is not pwrd dwn |  1: Is pwrd dwn in dynamic pwrd-dwn mode
+	reg_val = reg_val | (0 << 1);		//	0: Normal Mode |  1: RX portion of AFE pwrd dwn  
+	reg_val = reg_val | (0 << 0);		//	0: Normal Mode |  1: Entire AFE is pwrd dwn   
+	I2cMasterAfe4404Write(Address[33], reg_val,3);

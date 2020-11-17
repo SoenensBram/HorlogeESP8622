@@ -141,7 +141,7 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     vTaskDelay(100 / portTICK_RATE_MS);
     I2cMasterInit();
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
-        ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
+        if(!(i<42&47<i)&i<63)ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
     }
     ESP_LOGI(TAG2, "Done I2C InitRegister!");
     return ESP_OK;
@@ -216,7 +216,6 @@ static esp_err_t Afe4404PowerUp(){
  * @brief code for getting and calculating data from AFE4404
  */
 static esp_err_t EspSpo2Data(){
-    //I2cMasterAfe4404Write(Address[0], 0xD00000, 3);
     uint8_t data1 = 0;
     uint8_t length = 24;
     I2cMasterAfe4404Read(42, data1, length);
