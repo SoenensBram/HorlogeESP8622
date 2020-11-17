@@ -73,26 +73,26 @@ uint32_t Value[] =
  7008,              //ADCRSTSTCT3
  7014,              //ADCRSTENDCT3
  39999,             //PRPCT
- 0x000000,          //TIMEREN, NUMAV
- 0x000000,          //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP
- 0x000000,          //PROG_TG_EN, TIA_CF, TIA_GAIN
- 0x000000,          //ILED_2X, DYNAMIC2, OSC_ENABLE, DYNAMIC3, DYNAMIC4, PDNRX, PDNAFE
- 0x000000,          //ENABLE_CLKOUT, CLKDIV_CLKOUT
- 0x000000,          //read only LED2VAL
- 0x000000,          //read only ALED2VAL\LED3VAL
- 0x000000,          //read only LED1VAL
- 0x000000,          //read only ALED1VAL
- 0x000000,          //read only LED2-ALED2VAL
- 0x000000,          //read only LED1-ALED1VAL
- 0x000000,          //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
+ 271,               //TIMEREN, NUMAV
+ 32789,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP
+ 0,                 //PROG_TG_EN, TIA_CF, TIA_GAIN
+ 1065496,           //ILED_2X, DYNAMIC2, OSC_ENABLE, DYNAMIC3, DYNAMIC4, PDNRX, PDNAFE
+ 0,                 //ENABLE_CLKOUT, CLKDIV_CLKOUT
+ 0,       //read only LED2VAL
+ 0,       //read only ALED2VAL\LED3VAL
+ 0,       //read only LED1VAL
+ 0,       //read only ALED1VAL
+ 0,       //read only LED2-ALED2VAL
+ 0,       //read only LED1-ALED1VAL
+ 0,                 //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
  7675,              //PDNCYCLESTC
  39199,             //PDNCYCLEENDC
- 0x000000,          //PROG_TG_STC
- 0x000000,          //PROG_TG_ENDC
+ 0,                 //PROG_TG_STC
+ 0,                 //PROG_TG_ENDC
  400,               //LED3LEDSTC
  798,               //LED3LEDENDC
- 0x000000,          //CLKDIV_PRF
- 0x000000,          //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
- 0x000000,          //DEC_EN, DEC_FACTOR
- 0x000000,          //read only AVG_LED2-ALED2VAL
- 0x000000};         //read only AVG_LED1-ALED1VAL
+ 0,                 //CLKDIV_PRF
+ 0,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
+ 0,                 //DEC_EN, DEC_FACTOR
+ 0,       //read only AVG_LED2-ALED2VAL
+ 0};      //read only AVG_LED1-ALED1VAL
