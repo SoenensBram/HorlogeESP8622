@@ -137,6 +137,7 @@ static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, si
 static esp_err_t I2cMasterAfe4404InitializeRegister(){
     vTaskDelay(100 / portTICK_RATE_MS);
     I2cMasterInit();
+    I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(WriteableRegister[i])ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
     }
@@ -147,14 +148,14 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
 /**
  * @brief code for getting and calculating data from AFE4404
  */
-static void EspSpo2Data(void *arg){
+static void EspSpo2Data(){
     //I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
-    uint8_t data1 = 0;
+    uint8_t data1;
     uint8_t length = 24;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(!WriteableRegister[i]){
-            I2cMasterAfe4404Read(Address[i], data1, length);
-            ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , (uint32_t)data1);
+            I2cMasterAfe4404Read(Address[i], &data1, length);
+            ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , data1);
         }
     }
     //I2cMasterAfe4404Write(Address[34], &Value[34] ,3);
@@ -192,7 +193,7 @@ static esp_err_t InitInteruptPortDataReady(){
     ESP_LOGI(TAG2, "Interupts configured");
     ESP_ERROR_CHECK(gpio_install_isr_service(0));
     ESP_LOGI(TAG2, "Interupt service installed");
-    ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
+    //ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
     ESP_LOGI(TAG2, "Interupts Done!");
     return ESP_OK;
 }
