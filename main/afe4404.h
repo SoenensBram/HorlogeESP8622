@@ -31,7 +31,7 @@ unsigned int
 RxSupplyEnable      = 16,
 TxSupplyEnable      = 5,
 PowerEnable         = 4,
-ResetAfe            = 0,
+ResetAfe            = 13,
 DataReadyInterupt   = 12,
 I2cMasterSclIo      = 2,                /*!< gpio number for I2C master clock */
 I2cMasterSdaIo      = 14;               /*!< gpio number for I2C master data  */
@@ -75,7 +75,7 @@ uint32_t Value[] =  {
 3608,              //ADCRSTSTCT3
 3614,              //ADCRSTENDCT3
 39999,               //PRPCT
-271,               //TIMEREN, NUMAV
+259,               //TIMEREN, NUMAV
 32771,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP
 3,                 //PROG_TG_EN, TIA_CF, TIA_GAIN
 12495,             //ILED3,ILED2, ILED1
@@ -94,7 +94,7 @@ uint32_t Value[] =  {
 0,                 //PROG_TG_ENDC
 409,               //LED3LEDSTC
 800,               //LED3LEDENDC
-0,                 //CLKDIV_PRF
+1,                 //CLKDIV_PRF
 0,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
 0,                 //DEC_EN, DEC_FACTOR
 0,       //read only AVG_LED2-ALED2VAL

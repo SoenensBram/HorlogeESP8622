@@ -120,7 +120,7 @@ void app_main()
 {
     ESP_ERROR_CHECK(Afe4404PowerUp());
     //while (1){
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
         EspSpo2Data();
     //}
     
