@@ -148,9 +148,8 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
 /**
  * @brief code for getting and calculating data from AFE4404
  */
-static void EspSpo2Data(){
-    //uint32_t gpio_num = (uint32_t) arg;
-    //xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
+static void EspSpo2Data(void *arg){
+    ESP_LOGI(TAG2, "ISR triggerd");
     uint8_t data1;
     uint8_t length = 24;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
@@ -183,14 +182,8 @@ static esp_err_t MasterAfe4404InitializePorts(){
 static esp_err_t InitInteruptPortDataReady(){
     ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
     ESP_ERROR_CHECK(gpio_set_intr_type(DataReadyInterupt,GPIO_INTR_POSEDGE));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(DataReadyInterupt,GPIO_PULLDOWN_ONLY));
+    ESP_ERROR_CHECK(gpio_set_pull_mode(DataReadyInterupt,GPIO_FLOATING));
     ESP_LOGI(TAG2, "Interupts configured");
-    gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
-    ESP_LOGI(TAG2, "Queue initiated");
-    ESP_ERROR_CHECK(gpio_install_isr_service(0));
-    ESP_LOGI(TAG2, "Interupt service installed");
-    //ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
-    ESP_LOGI(TAG2, "Interupts Done!");
     return ESP_OK;
 }
 

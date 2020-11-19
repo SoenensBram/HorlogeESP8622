@@ -116,12 +116,43 @@ static void http_post(void *pvParameters){
     }
 }
 
+static xQueueHandle gpio_evt_queue = NULL;
+
+static void gpio_isr_handler(void *arg)
+{
+    ESP_LOGI(TAG, "ISR triggerd");
+    uint32_t gpio_num = (uint32_t) arg;
+    xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
+}
+
+static void gpio_task_example(void *arg)
+{
+    uint32_t io_num;
+
+    for (;;) {
+        if (xQueueReceive(gpio_evt_queue, &io_num, portMAX_DELAY)) {
+            ESP_LOGI(TAG, "GPIO[%d] intr, val: %d\n", io_num, gpio_get_level(io_num));
+        }
+    }
+}
+
+
 void app_main()
 {
     ESP_ERROR_CHECK(Afe4404PowerUp());
+
+
+    gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
+    xTaskCreate(gpio_task_example, "gpio_task_example", 2048, NULL, 10, NULL);
+
+
+    ESP_LOGI(TAG, "Queue initiated");
+    ESP_ERROR_CHECK(gpio_install_isr_service(0));
+    ESP_LOGI(TAG, "Interupt service installed");
+    ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
     //while (1){
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-        EspSpo2Data();
+    //    vTaskDelay(10 / portTICK_PERIOD_MS);
+    //    EspSpo2Data();
     //}
     
     
@@ -133,4 +164,7 @@ void app_main()
     //ESP_ERROR_CHECK(example_connect());
 
     //xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Enter While");
+    while(1){}
+    ESP_LOGI(TAG, "End of MainApp");
 }

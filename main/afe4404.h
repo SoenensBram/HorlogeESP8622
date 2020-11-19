@@ -24,7 +24,6 @@ Pin 9  IO14     I2C_SCL
 Pin 14 IO2      I2C_SDA
 */
 
-static xQueueHandle gpio_evt_queue = NULL;
 
 static uint32_t i2c_frequency = 100000;
 unsigned int
