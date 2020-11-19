@@ -135,9 +135,6 @@ static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, si
  *     - ESP_OK Success
  */
 static esp_err_t I2cMasterAfe4404InitializeRegister(){
-    vTaskDelay(100 / portTICK_RATE_MS);
-    I2cMasterInit();
-    I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(WriteableRegister[i])ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
     }
@@ -145,12 +142,20 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     return ESP_OK;
 }
 
+static xQueueHandle gpio_evt_queue = NULL;
+
+static void InterruptRoutine(void* arg){
+    uint32_t gpio_num = (uint32_t) arg;
+    xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
+    DataReady = true;
+}
+
+
 /**
  * @brief code for getting and calculating data from AFE4404
  */
-static void EspSpo2Data(void *arg){
-    ESP_LOGI(TAG2, "ISR triggerd");
-    uint8_t data1;
+static void EspSpo2Data(){;
+    uint32_t data1;
     uint8_t length = 24;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(!WriteableRegister[i]){
@@ -158,6 +163,15 @@ static void EspSpo2Data(void *arg){
             ESP_LOGI(TAG2, "sensor_data %d: %d",Address[i] , data1);
         }
     }
+    //I2cMasterAfe4404Read(Address[36], &data1, length);
+    //ESP_LOGI(TAG2, "sensor_data %d: %d",Address[36] , data1);
+    //I2cMasterAfe4404Read(Address[37], &data1, length);
+    //ESP_LOGI(TAG2, "sensor_data %d: %d",Address[37] , data1);
+    //I2cMasterAfe4404Read(Address[38], &data1, length);
+    //ESP_LOGI(TAG2, "sensor_data %d: %d",Address[38] , data1);
+    //I2cMasterAfe4404Read(Address[39], &data1, length);
+    //ESP_LOGI(TAG2, "sensor_data %d: %d",Address[39] , data1);
+    DataReady = false;
     ESP_LOGI(TAG2, "Done read SPO2!");
 }
 
@@ -179,11 +193,16 @@ static esp_err_t MasterAfe4404InitializePorts(){
     return ESP_OK;
 }
 
+
 static esp_err_t InitInteruptPortDataReady(){
-    ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
+    gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
     ESP_ERROR_CHECK(gpio_set_intr_type(DataReadyInterupt,GPIO_INTR_POSEDGE));
+    ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(DataReadyInterupt,GPIO_FLOATING));
     ESP_LOGI(TAG2, "Interupts configured");
+    ESP_ERROR_CHECK(gpio_install_isr_service(0));
+    ESP_LOGI(TAG2, "Interupt service installed");
+    ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, InterruptRoutine, (void *) DataReadyInterupt));
     return ESP_OK;
 }
 
@@ -204,6 +223,9 @@ static esp_err_t Afe4404InitializePowerUp(){
     ets_delay_us(35000);
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
     ESP_LOGI(TAG2, "Done I2C Hard Slave Powerup!");
+    vTaskDelay(100 / portTICK_RATE_MS);
+    I2cMasterInit();
+    I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     return ESP_OK;
 }
 

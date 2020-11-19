@@ -24,14 +24,14 @@ Pin 9  IO14     I2C_SCL
 Pin 14 IO2      I2C_SDA
 */
 
-
+bool DataReady = false;
 static uint32_t i2c_frequency = 100000;
 unsigned int
-RxSupplyEnable      = 16,
-TxSupplyEnable      = 5,
-PowerEnable         = 4,
+RxSupplyEnable      = 10,
+TxSupplyEnable      = 9,
+PowerEnable         = 12,
 ResetAfe            = 13,
-DataReadyInterupt   = 12,
+DataReadyInterupt   = 5,
 I2cMasterSclIo      = 2,                /*!< gpio number for I2C master clock */
 I2cMasterSdaIo      = 14;               /*!< gpio number for I2C master data  */
 i2c_port_t I2cMasterNum = I2C_NUM_0;    /*!< I2C port number for master dev */

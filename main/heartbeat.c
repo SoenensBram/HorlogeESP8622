@@ -37,8 +37,8 @@ static void http_post(void *pvParameters){
     int s, r;
     char recv_buf[64];
 
-    int i = 0;
-    while(i<1){
+    unsigned int k = 0;
+    while(k<1){
 
         int err = getaddrinfo("192.168.9.46", "8000", &hints, &res);
 
@@ -112,46 +112,30 @@ static void http_post(void *pvParameters){
             vTaskDelay(10000 / portTICK_PERIOD_MS);
         }
         ESP_LOGI(TAG, "Done!");
-        //i = 10;
+        //k = 10;
     }
 }
 
-static xQueueHandle gpio_evt_queue = NULL;
-
-static void gpio_isr_handler(void *arg)
-{
-    ESP_LOGI(TAG, "ISR triggerd");
-    uint32_t gpio_num = (uint32_t) arg;
-    xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
-}
-
-static void gpio_task_example(void *arg)
-{
-    uint32_t io_num;
-
-    for (;;) {
-        if (xQueueReceive(gpio_evt_queue, &io_num, portMAX_DELAY)) {
-            ESP_LOGI(TAG, "GPIO[%d] intr, val: %d\n", io_num, gpio_get_level(io_num));
-        }
-    }
-}
 
 
 void app_main()
 {
+
     ESP_ERROR_CHECK(Afe4404PowerUp());
 
+    //remove isr handler for gpio number.
+    //gpio_isr_handler_remove(DataReadyInterupt);
+    //hook isr handler for specific gpio pin again
+    //gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void *) DataReadyInterupt);
 
-    gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
-    xTaskCreate(gpio_task_example, "gpio_task_example", 2048, NULL, 10, NULL);
 
+    while (1) {
+        if(DataReady)EspSpo2Data();
+        vTaskDelay(1000 / portTICK_RATE_MS);
+    }
 
-    ESP_LOGI(TAG, "Queue initiated");
-    ESP_ERROR_CHECK(gpio_install_isr_service(0));
-    ESP_LOGI(TAG, "Interupt service installed");
-    ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void*) DataReadyInterupt));
     //while (1){
-    //    vTaskDelay(10 / portTICK_PERIOD_MS);
+    //    vTaskDelay(10000 / portTICK_PERIOD_MS);
     //    EspSpo2Data();
     //}
     
@@ -164,7 +148,11 @@ void app_main()
     //ESP_ERROR_CHECK(example_connect());
 
     //xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
-    ESP_LOGI(TAG, "Enter While");
-    while(1){}
-    ESP_LOGI(TAG, "End of MainApp");
+
+    //ESP_ERROR_CHECK(Afe4404PowerUp());
+
+
+    //ESP_LOGI(TAG, "Enter While");
+    //while(1){}
+    //ESP_LOGI(TAG, "End of MainApp");
 }
