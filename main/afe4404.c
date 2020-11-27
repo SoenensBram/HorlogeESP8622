@@ -142,7 +142,6 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     return ESP_OK;
 }
 
-static xQueueHandle gpio_evt_queue = NULL;
 
 static void InterruptRoutine(void* arg){
     uint32_t gpio_num = (uint32_t) arg;

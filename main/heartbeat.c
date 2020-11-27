@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -16,17 +17,22 @@
 
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "94.110.140.22"
-#define WEB_PORT "256"
-#define WEB_URL "http://94.110.140.22:256/"
+#define WEB_SERVER "192.168.4.30"
+#define WEB_PORT "8000"
+#define WEB_URL "http://192.168.4.30:8000/"
 
 static const char *TAG = "ProjectHeartBeats";
+//char stringdata[100];
+char *REQUEST ="POST http://192.168.4.30:8000/stress/meting HTTP/1.0\r\nHost:http://192.168.4.30\r\nUser-Agent:esp-idf/1.0esp32\r\nConnection:keep-alive\r\nAccept:*/*\r\nAccept-Encoding:gzip,deflate,br\r\nContent-Length:44\r\nContent-Type:application/json\r\n\r\n{\"PersonID\":2,\"curHartslag\":95,\"curSPO2\":75}";
 
-char *REQUEST = 
-"POST http://192.168.9.46:8000/device/stess/meting HTTP/1.0\r\nHost: 192.168.9.46\r\nUser-Agent: esp-idf/1.0 esp32\r\nContent-Length: 68\r\nContent-Type: application/json\r\n\r\n[{\"PersonID\":\"2\",\"curHartslag\":\"Hartslagwaarde\",\"curSPO2\":\"spo2waarde\"}]\r\n\r\n";
-//"POST http://94.110.140.22:256/device/e864877977f2b070210a80bd094eb857/playMedia HTTP/1.0\r\nHost: 94.110.140.22\r\nUser-Agent: esp-idf/1.0 esp32\r\nContent-Length: 68\r\nContent-Type: application/json\r\n\r\n[{\"mediaType\":\"MP3\",\"mediaUrl\":\"http://flandersrp.be/song2.mp3\"}]\r\n\r\n";
+//"GET http://192.168.4.30:8000/stress/ HTTP/1.0\r\nHost: 192.168.4.30\r\nUser-Agent: esp-idf/1.0 esp8266\r\n\r\n";
+//"POST http://192.168.4.30:256/device/e864877977f2b070210a80bd094eb857/playMedia HTTP/1.0\r\nHost: 94.110.140.22\r\nUser-Agent: esp-idf/1.0 esp32\r\nContent-Length: 68\r\nContent-Type: application/json\r\n\r\n[{\"mediaType\":\"MP3\",\"mediaUrl\":\"http://flandersrp.be/song2.mp3\"}]\r\n\r\n";
 
 static void http_post(void *pvParameters){
+
+
+
+
     //Afe4404PowerUp();
     const struct addrinfo hints = {
         .ai_family = AF_INET,
@@ -40,7 +46,7 @@ static void http_post(void *pvParameters){
     unsigned int k = 0;
     while(k<1){
 
-        int err = getaddrinfo("192.168.9.46", "8000", &hints, &res);
+        int err = getaddrinfo("192.168.4.30", "8000", &hints, &res);
 
         if(err != 0 || res == NULL) {
             ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
@@ -82,8 +88,10 @@ static void http_post(void *pvParameters){
             vTaskDelay(4000 / portTICK_PERIOD_MS);
             continue;
         }
+        else{
+            vTaskDelay(400 / portTICK_PERIOD_MS);
+        }
         ESP_LOGI(TAG, "... socket send success");
-
         struct timeval receiving_timeout;
         receiving_timeout.tv_sec = 5;
         receiving_timeout.tv_usec = 0;
@@ -104,12 +112,11 @@ static void http_post(void *pvParameters){
                 putchar(recv_buf[i]);
             }
         } while(r > 0);
-
-        ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d\r\n", r, errno);
+        ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d Recieved=%s\r\n", r, errno,recv_buf);
         close(s);
         for(int countdown = 10; countdown >= 0; countdown--) {
             ESP_LOGI(TAG, "%d... ", countdown);
-            vTaskDelay(10000 / portTICK_PERIOD_MS);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
         ESP_LOGI(TAG, "Done!");
         //k = 10;
@@ -121,7 +128,8 @@ static void http_post(void *pvParameters){
 void app_main()
 {
 
-    ESP_ERROR_CHECK(Afe4404PowerUp());
+    ESP_ERROR_CHECK(Afe4404PowerUp()); //INTERUPTS!!!!!
+    ESP_LOGI(TAG, REQUEST);
 
     //remove isr handler for gpio number.
     //gpio_isr_handler_remove(DataReadyInterupt);
@@ -129,10 +137,10 @@ void app_main()
     //gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void *) DataReadyInterupt);
 
 
-    while (1) {
-        if(DataReady)EspSpo2Data();
-        vTaskDelay(1000 / portTICK_RATE_MS);
-    }
+    //while (1) {
+    //    if(DataReady)EspSpo2Data();
+    //    vTaskDelay(1 / portTICK_RATE_MS);
+    //}
 
     //while (1){
     //    vTaskDelay(10000 / portTICK_PERIOD_MS);
@@ -140,14 +148,14 @@ void app_main()
     //}
     
     
-    //ESP_ERROR_CHECK(nvs_flash_init());
-    //ESP_ERROR_CHECK(esp_netif_init());
-    //ESP_ERROR_CHECK(esp_event_loop_create_default());
+    ESP_ERROR_CHECK(nvs_flash_init());
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
 
 
-    //ESP_ERROR_CHECK(example_connect());
+    ESP_ERROR_CHECK(example_connect());
 
-    //xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
+    xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
 
     //ESP_ERROR_CHECK(Afe4404PowerUp());
 
