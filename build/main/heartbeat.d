@@ -96,7 +96,8 @@ heartbeat.o: \
  /home/bram/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
  /home/bram/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/gpio_register.h \
  /home/bram/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h \
- /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/afe4404.h
+ /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/afe4404.h \
+ /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/heartbeat.h
 
 /home/bram/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h:
 
@@ -291,4 +292,6 @@ heartbeat.o: \
 /home/bram/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h:
 
 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/afe4404.h:
+
+/home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/heartbeat.h:
 /home/bram/Documents/vives/kortrijk/buisnesproject/Compilen/firmware/main/./heartbeat.c:

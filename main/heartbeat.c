@@ -14,26 +14,58 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include "afe4404.c"
+#include "heartbeat.h"
 
 
-/* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "192.168.4.30"
-#define WEB_PORT "8000"
-#define WEB_URL "http://192.168.4.30:8000/"
 
 static const char *TAG = "ProjectHeartBeats";
-//char stringdata[100];
-char *REQUEST ="POST http://192.168.4.30:8000/stress/meting HTTP/1.0\r\nHost:http://192.168.4.30\r\nUser-Agent:esp-idf/1.0esp32\r\nConnection:keep-alive\r\nAccept:*/*\r\nAccept-Encoding:gzip,deflate,br\r\nContent-Length:44\r\nContent-Type:application/json\r\n\r\n{\"PersonID\":2,\"curHartslag\":95,\"curSPO2\":75}";
 
-//"GET http://192.168.4.30:8000/stress/ HTTP/1.0\r\nHost: 192.168.4.30\r\nUser-Agent: esp-idf/1.0 esp8266\r\n\r\n";
-//"POST http://192.168.4.30:256/device/e864877977f2b070210a80bd094eb857/playMedia HTTP/1.0\r\nHost: 94.110.140.22\r\nUser-Agent: esp-idf/1.0 esp32\r\nContent-Length: 68\r\nContent-Type: application/json\r\n\r\n[{\"mediaType\":\"MP3\",\"mediaUrl\":\"http://flandersrp.be/song2.mp3\"}]\r\n\r\n";
+static void InitArays(){
+    if(!endHttpPart == 0){
+        if(IsPost){
+            strcpy(REQUEST[endHttpPart],Post);
+            endHttpPart =+ locationHttp[0];
+            strcpy(REQUEST[endHttpPart],WebServer);
+            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
+            strcpy(REQUEST[endHttpPart],"/");
+            endHttpPart =+ 1; 
+            strcpy(REQUEST[endHttpPart],WebPort);
+            endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
+            strcpy(REQUEST[endHttpPart],Path);
+            endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
+            strcpy(REQUEST[endHttpPart],Post[locationHttp[0]]);
+            endHttpPart =+ locationHttp[1]-locationHttp[0];
+            strcpy(REQUEST[endHttpPart],WebServer);
+            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
+            strcpy(REQUEST[endHttpPart],Post[locationHttp[1]]);
+        }else{
+            strcpy(REQUEST[endHttpPart],Get);
+            endHttpPart =+ locationHttp[0];
+            strcpy(REQUEST[endHttpPart],WebServer);
+            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
+            strcpy(REQUEST[endHttpPart],"/");
+            endHttpPart =+ 1; 
+            strcpy(REQUEST[endHttpPart],WebPort);
+            endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
+            strcpy(REQUEST[endHttpPart],Path);
+            endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
+            strcpy(REQUEST[endHttpPart],Get[locationHttp[0]]);
+            endHttpPart =+ locationHttp[1]-locationHttp[0];
+            strcpy(REQUEST[endHttpPart],WebServer);
+            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
+            strcpy(REQUEST[endHttpPart],Get[locationHttp[1]]);
+        };
+    }
+    uint8_t startJson = endHttpPart;
+    for(uint8_t i = 0; i<(sizeof(locationHttp)/sizeof(locationHttp[0]));i++){
+        strcpy(REQUEST[i],Json);
+
+    };
+    
+        
+}
 
 static void http_post(void *pvParameters){
-
-
-
-
-    //Afe4404PowerUp();
     const struct addrinfo hints = {
         .ai_family = AF_INET,
         .ai_socktype = SOCK_STREAM,
@@ -46,7 +78,7 @@ static void http_post(void *pvParameters){
     unsigned int k = 0;
     while(k<1){
 
-        int err = getaddrinfo("192.168.4.30", "8000", &hints, &res);
+        int err = getaddrinfo(WebServer, WebPort, &hints, &res);
 
         if(err != 0 || res == NULL) {
             ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
@@ -127,10 +159,8 @@ static void http_post(void *pvParameters){
 
 void app_main()
 {
-
-    ESP_ERROR_CHECK(Afe4404PowerUp()); //INTERUPTS!!!!!
-    ESP_LOGI(TAG, REQUEST);
-
+    InitArays();
+    ESP_ERROR_CHECK(Afe4404PowerUp());
     //remove isr handler for gpio number.
     //gpio_isr_handler_remove(DataReadyInterupt);
     //hook isr handler for specific gpio pin again
