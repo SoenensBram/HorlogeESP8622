@@ -28,7 +28,9 @@ Pin 14 IO2      I2C_SDA
 
 static xQueueHandle gpio_evt_queue = NULL;
 
+enum Sensor{Led2, aLed2, Led1, aLed1, diffLed2, diffLed1, AvgDiffLed2, AvgDiffLed1};
 bool DataReady = false;
+uint32_t DataReadyCount = 0;
 static uint32_t i2c_frequency = 100000;
 unsigned int
 RxSupplyEnable      = 10,
@@ -47,6 +49,7 @@ char AckVal = 0x0;                      /*!< I2C ack value */
 char NackVal = 0x1;                     /*!< I2C nack value */
 char LastNackVal = 0x2;                 /*!< I2C last_nack value */
 unsigned int RegisterEnteriesAfe4404 = 54;
+uint8_t GetAddress[8];
 uint32_t Value[] =  {
 0,                 //SW_RESET, TM_COUNT_RST, REG_READ
 100,                //LED2STC

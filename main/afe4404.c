@@ -135,8 +135,14 @@ static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, si
  *     - ESP_OK Success
  */
 static esp_err_t I2cMasterAfe4404InitializeRegister(){
+    uint8_t j = 0;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
-        if(WriteableRegister[i])ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
+        if(WriteableRegister[i]){
+            ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
+        }else{
+            GetAddress[j] = Address[i];
+            j ++;
+        }
     }
     ESP_LOGI(TAG2, "Done I2C InitRegister!");
     return ESP_OK;
@@ -147,11 +153,12 @@ static void InterruptRoutine(void* arg){
     uint32_t gpio_num = (uint32_t) arg;
     xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
     DataReady = true;
+    DataReadyCount ++;
 }
 
 
 /**
- * @brief code for getting and calculating data from AFE4404
+ * @brief code for getting and calculating data from AFE4404 Debugging only
  */
 static void EspSpo2Data(){;
     uint32_t data1;
@@ -223,7 +230,6 @@ static esp_err_t Afe4404InitializePowerUp(){
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
     ESP_LOGI(TAG2, "Done I2C Hard Slave Powerup!");
     vTaskDelay(100 / portTICK_RATE_MS);
-    I2cMasterInit();
     I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     return ESP_OK;
 }
@@ -234,11 +240,50 @@ static esp_err_t Afe4404InitializePowerUp(){
  *     - ESP_OK Success
  */
 static esp_err_t Afe4404PowerUp(){
-    MasterAfe4404InitializePorts();
     Afe4404InitializePowerUp();
     I2cMasterAfe4404InitializeRegister();
-    InitInteruptPortDataReady();
-    ESP_LOGI(TAG2, "Done I2C Soft Slave Powerup!");
+    DataReadyCount = 0;
+    ESP_LOGI(TAG2, "AFE Powerup!");
     return ESP_OK;
+}
+
+//Power AFe down
+static esp_err_t Afe4404PowerDown(){
+    ESP_ERROR_CHECK(gpio_set_level(PowerEnable,0));
+    ESP_ERROR_CHECK(gpio_set_level(RxSupplyEnable,0));
+    ESP_ERROR_CHECK(gpio_set_level(TxSupplyEnable,0));
+    ESP_ERROR_CHECK(gpio_set_level(ResetAfe,0));
+    ESP_LOGI(TAG2, "AFE Powerdown");
+    return ESP_OK;
+}
+
+//initalizing data and setting u pins for ESP
+static esp_err_t Afe4404Init(){
+    MasterAfe4404InitializePorts();
+    InitInteruptPortDataReady();
+    I2cMasterInit();
+    ESP_LOGI(TAG2, "esp init for AFE");
+    return ESP_OK;
+}
+
+//getting data from a single sensor
+static uint32_t AfeGetData(enum Sensor readout){
+    uint32_t data1;
+    uint8_t length = 24;
+    I2cMasterAfe4404Read(GetAddress[readout], &data1, length);
+    return data1;
+}
+
+//Only methode that needs to be called to read an array of results
+static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
+    Afe4404PowerUp();
+    uint i = 0;
+    while (i<size){
+        if(DataReadyCount>10){
+            Data[i] = AfeGetData(readout);
+            i++;
+        }
+    }
+    Afe4404PowerDown();
 }
 

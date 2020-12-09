@@ -20,49 +20,74 @@
 
 static const char *TAG = "ProjectHeartBeats";
 
-static void InitArays(){
+static void InitArays(uint32_t *DataSamples, uint16_t sizeData){
     if(!endHttpPart == 0){
         if(IsPost){
-            strcpy(REQUEST[endHttpPart],Post);
+            strcpy(&REQUEST[endHttpPart],Post);
             endHttpPart =+ locationHttp[0];
-            strcpy(REQUEST[endHttpPart],WebServer);
+            strcpy(&REQUEST[endHttpPart],WebServer);
             endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(REQUEST[endHttpPart],"/");
+            strcpy(&REQUEST[endHttpPart],"/");
             endHttpPart =+ 1; 
-            strcpy(REQUEST[endHttpPart],WebPort);
+            strcpy(&REQUEST[endHttpPart],WebPort);
             endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
-            strcpy(REQUEST[endHttpPart],Path);
+            strcpy(&REQUEST[endHttpPart],Path);
             endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
-            strcpy(REQUEST[endHttpPart],Post[locationHttp[0]]);
+            strcpy(&REQUEST[endHttpPart],&Post[locationHttp[0]]);
             endHttpPart =+ locationHttp[1]-locationHttp[0];
-            strcpy(REQUEST[endHttpPart],WebServer);
+            strcpy(&REQUEST[endHttpPart],WebServer);
             endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(REQUEST[endHttpPart],Post[locationHttp[1]]);
+            strcpy(&REQUEST[endHttpPart],&Post[locationHttp[1]]);
         }else{
-            strcpy(REQUEST[endHttpPart],Get);
+            strcpy(&REQUEST[endHttpPart],Get);
             endHttpPart =+ locationHttp[0];
-            strcpy(REQUEST[endHttpPart],WebServer);
+            strcpy(&REQUEST[endHttpPart],WebServer);
             endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(REQUEST[endHttpPart],"/");
+            strcpy(&REQUEST[endHttpPart],"/");
             endHttpPart =+ 1; 
-            strcpy(REQUEST[endHttpPart],WebPort);
+            strcpy(&REQUEST[endHttpPart],WebPort);
             endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
-            strcpy(REQUEST[endHttpPart],Path);
+            strcpy(&REQUEST[endHttpPart],Path);
             endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
-            strcpy(REQUEST[endHttpPart],Get[locationHttp[0]]);
+            strcpy(&REQUEST[endHttpPart],&Get[locationHttp[0]]);
             endHttpPart =+ locationHttp[1]-locationHttp[0];
-            strcpy(REQUEST[endHttpPart],WebServer);
+            strcpy(&REQUEST[endHttpPart],WebServer);
             endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(REQUEST[endHttpPart],Get[locationHttp[1]]);
+            strcpy(&REQUEST[endHttpPart],&Get[locationHttp[1]]);
         };
-    }
-    uint8_t startJson = endHttpPart;
-    for(uint8_t i = 0; i<(sizeof(locationHttp)/sizeof(locationHttp[0]));i++){
-        strcpy(REQUEST[i],Json);
-
     };
-    
-        
+    //Berekenen van de lengte van de json
+    strcpy(JsonData,"[\"");
+    uint16_t jsonLocation = 2;
+    char tempChar[8];
+    for(uint16_t i = 0; i < sizeData;i++){ //["ele1", "ele2", "ele3"]
+        sprintf(tempChar,"\"%d\",",DataSamples[i]);
+        strcpy(&JsonData[jsonLocation],&tempChar);
+        jsonLocation=+(sizeof(tempChar)/sizeof(char));
+    };
+    strcpy(&JsonData[jsonLocation],"]");
+    jsonLocation = jsonLocation + 9 + (sizeof(JsonElement1)/sizeof(JsonElement1[0])) + (sizeof(JsonData1)/sizeof(JsonData1[0])) + (sizeof(JsonElement2)/sizeof(JsonElement2[0]));
+    uint16_t startJson = endHttpPart;
+    strcpy(&REQUEST[startJson],Json);
+    startJson =+ locationJson[0];
+    sprintf(tempChar,"%d",jsonLocation);
+    strcpy(&REQUEST[startJson],tempChar);
+    startJson =+ (sizeof(tempChar)/sizeof(char));
+    strcpy(&REQUEST[startJson],JsonElement1);
+    startJson =+ (sizeof(JsonElement1)/sizeof(JsonElement1[0]));
+    strcpy(&REQUEST[startJson],&Json[locationJson[0]]);
+    startJson =+ locationJson[1]-locationJson[0];
+    strcpy(&REQUEST[startJson],&JsonData1);
+    startJson =+ (sizeof(JsonData1)/sizeof(JsonData1[0]));
+    strcpy(&REQUEST[startJson],&Json[locationJson[1]]);
+    startJson =+ locationJson[2]-locationJson[1];
+    strcpy(&REQUEST[startJson],JsonElement2);
+    startJson =+ (sizeof(JsonElement2)/sizeof(JsonElement2[0]));
+    strcpy(&REQUEST[startJson],&Json[locationJson[2]]);
+    startJson =+ locationJson[3]-locationJson[2];
+    strcpy(&REQUEST[startJson],JsonData);
+    startJson =+ (sizeof(JsonData)/sizeof(char));
+    strcpy(&REQUEST[startJson],&Json[locationJson[4]]);
 }
 
 static void http_post(void *pvParameters){
@@ -159,18 +184,20 @@ static void http_post(void *pvParameters){
 
 void app_main()
 {
-    InitArays();
-    ESP_ERROR_CHECK(Afe4404PowerUp());
+    ESP_ERROR_CHECK(Afe4404Init());
+    uint32_t DataSamplesAFE[DataSampleSize];
+    AfeGetDataArray(DataSampleSize, *DataSamplesAFE, sensorData);
+    InitArays(DataSampleSize, *DataSamplesAFE);
     //remove isr handler for gpio number.
     //gpio_isr_handler_remove(DataReadyInterupt);
     //hook isr handler for specific gpio pin again
     //gpio_isr_handler_add(DataReadyInterupt, EspSpo2Data, (void *) DataReadyInterupt);
 
 
-    //while (1) {
-    //    if(DataReady)EspSpo2Data();
-    //    vTaskDelay(1 / portTICK_RATE_MS);
-    //}
+    //b while (1) {
+    //b     if(DataReady)EspSpo2Data();
+    //b     vTaskDelay(1 / portTICK_RATE_MS);
+    //b }
 
     //while (1){
     //    vTaskDelay(10000 / portTICK_PERIOD_MS);
