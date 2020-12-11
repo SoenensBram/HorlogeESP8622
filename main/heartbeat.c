@@ -169,7 +169,7 @@ static void BuildRequest(void *pvParameters){
     uint32_t DataSamplesAFE[DataSampleSize];
     AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
     InitArays(DataSampleSize, &DataSamplesAFE);
-    ESP_LOGI("Request: \r\n",REQUEST);
+    //ESP_LOGI("Request: \r\n",REQUEST);
 }
 
 void app_main(){
