@@ -1,6 +1,7 @@
 # TODO: readme for firmware Project Heartbeat
 
 ## PCB TODO
+# Link: https://easyeda.com/skyper100mc/espwatch
 MOSFETS are wrong needs fixing
 
 ## bread board TODO
