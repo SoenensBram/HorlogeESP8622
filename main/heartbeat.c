@@ -16,78 +16,63 @@
 #include "afe4404.c"
 #include "heartbeat.h"
 
-
-
 static const char *TAG = "ProjectHeartBeats";
 
-static void InitArays(uint32_t *DataSamples, uint16_t sizeData){
-    if(!endHttpPart == 0){
+static void InitArays(uint16_t sizeData, uint32_t *Data){
+    uint32_t RequestSize = sizeof(REQUEST)/sizeof(REQUEST[0]);
+    if(endHttpPart < 67){
         if(IsPost){
-            strcpy(&REQUEST[endHttpPart],Post);
-            endHttpPart =+ locationHttp[0];
-            strcpy(&REQUEST[endHttpPart],WebServer);
-            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(&REQUEST[endHttpPart],"/");
-            endHttpPart =+ 1; 
-            strcpy(&REQUEST[endHttpPart],WebPort);
-            endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
-            strcpy(&REQUEST[endHttpPart],Path);
-            endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
-            strcpy(&REQUEST[endHttpPart],&Post[locationHttp[0]]);
-            endHttpPart =+ locationHttp[1]-locationHttp[0];
-            strcpy(&REQUEST[endHttpPart],WebServer);
-            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(&REQUEST[endHttpPart],&Post[locationHttp[1]]);
+            snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,Post);
+            endHttpPart = endHttpPart + locationHttp[0];
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebServer);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,"/");
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebPort);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,Path);
+            snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,&Post[locationHttp[0]]);
+            endHttpPart = endHttpPart + locationHttp[1]-locationHttp[0];
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebServer);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,&Post[locationHttp[1]]);
         }else{
-            strcpy(&REQUEST[endHttpPart],Get);
-            endHttpPart =+ locationHttp[0];
-            strcpy(&REQUEST[endHttpPart],WebServer);
-            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(&REQUEST[endHttpPart],"/");
-            endHttpPart =+ 1; 
-            strcpy(&REQUEST[endHttpPart],WebPort);
-            endHttpPart =+ (sizeof(WebPort)/sizeof(WebPort[0]));
-            strcpy(&REQUEST[endHttpPart],Path);
-            endHttpPart =+ (sizeof(Path)/sizeof(Path[0]));
-            strcpy(&REQUEST[endHttpPart],&Get[locationHttp[0]]);
-            endHttpPart =+ locationHttp[1]-locationHttp[0];
-            strcpy(&REQUEST[endHttpPart],WebServer);
-            endHttpPart =+ (sizeof(WebServer)/sizeof(WebServer[0])); 
-            strcpy(&REQUEST[endHttpPart],&Get[locationHttp[1]]);
+            snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,Get);
+            endHttpPart = endHttpPart + locationHttp[0];
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebServer);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,"/");
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebPort);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,Path);
+            snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,&Get[locationHttp[0]]);
+            endHttpPart = endHttpPart + locationHttp[1]-locationHttp[0];
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,WebServer);
+            endHttpPart = endHttpPart + snprintf(&REQUEST[endHttpPart],RequestSize-endHttpPart,&Get[locationHttp[1]]);
         };
     };
     //Berekenen van de lengte van de json
-    strcpy(JsonData,"[\"");
-    uint16_t jsonLocation = 2;
+    uint32_t jsonSize = sizeof(JsonData)/sizeof(JsonData[0]);
+    uint16_t jsonLocation = snprintf(JsonData,jsonSize,"[");
     char tempChar[8];
     for(uint16_t i = 0; i < sizeData;i++){ //["ele1", "ele2", "ele3"]
-        sprintf(tempChar,"\"%d\",",DataSamples[i]);
-        strcpy(&JsonData[jsonLocation],&tempChar);
-        jsonLocation=+(sizeof(tempChar)/sizeof(char));
+        sprintf(tempChar,"%u,",Data[i]);
+        jsonLocation = jsonLocation + snprintf(&JsonData[jsonLocation],jsonSize-jsonLocation,tempChar);
     };
-    strcpy(&JsonData[jsonLocation],"]");
-    jsonLocation = jsonLocation + 9 + (sizeof(JsonElement1)/sizeof(JsonElement1[0])) + (sizeof(JsonData1)/sizeof(JsonData1[0])) + (sizeof(JsonElement2)/sizeof(JsonElement2[0]));
+    snprintf(&JsonData[jsonLocation-1],jsonSize-jsonLocation,"]");
+    jsonSize = jsonLocation + (sizeof(JsonElement1)+sizeof(JsonElement2)+sizeof(JsonData1))/sizeof(char);
     uint16_t startJson = endHttpPart;
-    strcpy(&REQUEST[startJson],Json);
-    startJson =+ locationJson[0];
-    sprintf(tempChar,"%d",jsonLocation);
-    strcpy(&REQUEST[startJson],tempChar);
-    startJson =+ (sizeof(tempChar)/sizeof(char));
-    strcpy(&REQUEST[startJson],JsonElement1);
-    startJson =+ (sizeof(JsonElement1)/sizeof(JsonElement1[0]));
-    strcpy(&REQUEST[startJson],&Json[locationJson[0]]);
-    startJson =+ locationJson[1]-locationJson[0];
-    strcpy(&REQUEST[startJson],&JsonData1);
-    startJson =+ (sizeof(JsonData1)/sizeof(JsonData1[0]));
-    strcpy(&REQUEST[startJson],&Json[locationJson[1]]);
-    startJson =+ locationJson[2]-locationJson[1];
-    strcpy(&REQUEST[startJson],JsonElement2);
-    startJson =+ (sizeof(JsonElement2)/sizeof(JsonElement2[0]));
-    strcpy(&REQUEST[startJson],&Json[locationJson[2]]);
-    startJson =+ locationJson[3]-locationJson[2];
-    strcpy(&REQUEST[startJson],JsonData);
-    startJson =+ (sizeof(JsonData)/sizeof(char));
-    strcpy(&REQUEST[startJson],&Json[locationJson[4]]);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,Json);
+    startJson = startJson + locationJson[0];
+    sprintf(tempChar,"%u",jsonLocation);
+    startJson = startJson + snprintf(&REQUEST[startJson],RequestSize-startJson,tempChar);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[0]]);
+    startJson = startJson + locationJson[1]-locationJson[0];
+    startJson = startJson + snprintf(&REQUEST[startJson],RequestSize-startJson,JsonElement1);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[1]]);
+    startJson = startJson + locationJson[2]-locationJson[1];
+    startJson = startJson + snprintf(&REQUEST[startJson],RequestSize-startJson,JsonData1);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[2]]);
+    startJson = startJson + locationJson[3]-locationJson[2];
+    startJson = startJson + snprintf(&REQUEST[startJson],RequestSize-startJson,JsonElement2);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[3]]);
+    startJson = startJson + locationJson[4]-locationJson[3];
+    startJson = startJson + snprintf(&REQUEST[startJson],RequestSize-startJson,JsonData);
+    snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[4]]);
 }
 
 static void http_post(void *pvParameters){
@@ -180,14 +165,23 @@ static void http_post(void *pvParameters){
     }
 }
 
-
-
-void app_main()
-{
-    ESP_ERROR_CHECK(Afe4404Init());
+static void BuildRequest(void *pvParameters){
     uint32_t DataSamplesAFE[DataSampleSize];
-    AfeGetDataArray(DataSampleSize, *DataSamplesAFE, sensorData);
-    InitArays(DataSampleSize, *DataSamplesAFE);
+    AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
+    InitArays(DataSampleSize, &DataSamplesAFE);
+    ESP_LOGI("Request: \r\n",REQUEST);
+}
+
+void app_main(){
+    ESP_LOGI(TAG,"StartCode");
+    ESP_ERROR_CHECK(Afe4404Init());
+    //char bruh[10] = "bruh";
+    //int bob = 30;
+    //ESP_LOGI("Printing BRUH: ", bruh);
+    //char tmepem[16];
+    //sprintf(tmepem,"%u",bob);
+    //ESP_LOGI("Printing BOB: ", tmepem);
+    xTaskCreate(&BuildRequest, "build request", 40000, NULL, 5, NULL);
     //remove isr handler for gpio number.
     //gpio_isr_handler_remove(DataReadyInterupt);
     //hook isr handler for specific gpio pin again
@@ -204,7 +198,7 @@ void app_main()
     //    EspSpo2Data();
     //}
     
-    
+/*    
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -213,6 +207,7 @@ void app_main()
     ESP_ERROR_CHECK(example_connect());
 
     xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
+*/
 
     //ESP_ERROR_CHECK(Afe4404PowerUp());
 

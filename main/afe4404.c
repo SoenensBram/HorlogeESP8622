@@ -26,18 +26,18 @@ static esp_err_t I2cMasterInit(){
     configI2c.mode = I2C_MODE_MASTER;
     configI2c.sda_io_num = I2cMasterSdaIo;
     configI2c.scl_io_num = I2cMasterSclIo;
-    ESP_LOGI(TAG2, "Pins Assined!");
+    //ESP_LOGI(TAG2, "Pins Assined!");
     configI2c.sda_pullup_en = I2cPullup;
     configI2c.scl_pullup_en = I2cPullup;
-    ESP_LOGI(TAG2, "Pullup Set!");
+    //ESP_LOGI(TAG2, "Pullup Set!");
     configI2c.clk_stretch_tick = 300; // 300 ticks, Clock stretch is about 210us
-    ESP_LOGI(TAG2, "I2C clock set!");
+    //ESP_LOGI(TAG2, "I2C clock set!");
     i2c_driver_install(I2cMasterNum, I2C_MODE_MASTER);
-    ESP_LOGI(TAG2, "Driver installed!");
+    //ESP_LOGI(TAG2, "Driver installed!");
     ESP_ERROR_CHECK(i2c_param_config(I2cMasterNum, &configI2c));
-    ESP_LOGI(TAG2, "I2C Paramaters initialized");
+    //ESP_LOGI(TAG2, "I2C Paramaters initialized");
     //ESP_ERROR_CHECK(i2c_driver_install(I2cMasterNum, configI2c.mode));
-    ESP_LOGI(TAG2, "Done I2C Init!");
+    //ESP_LOGI(TAG2, "Done I2C Init!");
     return ESP_OK;
 }
 
@@ -71,7 +71,7 @@ static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint8_t *Data, s
     i2c_master_stop(commandI2c);
     returnValue = i2c_master_cmd_begin(I2cMasterNum, commandI2c, 1000 / portTICK_RATE_MS);
     i2c_cmd_link_delete(commandI2c);
-    ESP_LOGI(TAG2, "Done I2C Write!");
+    //ESP_LOGI(TAG2, "Done I2C Write!");
     return returnValue;
 }
 
@@ -102,7 +102,7 @@ static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint8_t *Data, s
  */
 static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, size_t DataLength){
     int returnValue;
-    ESP_LOGI(TAG2, "I2C Read!");
+    //ESP_LOGI(TAG2, "I2C Read!");
     i2c_cmd_handle_t commandI2c = i2c_cmd_link_create();
     i2c_master_start(commandI2c);
     i2c_master_write_byte(commandI2c, Afe4404Address | I2C_MASTER_WRITE, AckCheckEn);
@@ -144,7 +144,7 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
             j ++;
         }
     }
-    ESP_LOGI(TAG2, "Done I2C InitRegister!");
+    //ESP_LOGI(TAG2, "Done I2C InitRegister!");
     return ESP_OK;
 }
 
@@ -178,7 +178,7 @@ static void EspSpo2Data(){;
     //I2cMasterAfe4404Read(Address[39], &data1, length);
     //ESP_LOGI(TAG2, "sensor_data %d: %d",Address[39] , data1);
     DataReady = false;
-    ESP_LOGI(TAG2, "Done read SPO2!");
+    //ESP_LOGI(TAG2, "Done read SPO2!");
 }
 
 /**
@@ -195,7 +195,7 @@ static esp_err_t MasterAfe4404InitializePorts(){
     ESP_ERROR_CHECK(gpio_set_level(RxSupplyEnable,0));
     ESP_ERROR_CHECK(gpio_set_level(PowerEnable,0));
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
-    ESP_LOGI(TAG2, "Done I2C Ports Init!");
+    //ESP_LOGI(TAG2, "Done I2C Ports Init!");
     return ESP_OK;
 }
 
@@ -205,9 +205,9 @@ static esp_err_t InitInteruptPortDataReady(){
     ESP_ERROR_CHECK(gpio_set_intr_type(DataReadyInterupt,GPIO_INTR_POSEDGE));
     ESP_ERROR_CHECK(gpio_set_direction(DataReadyInterupt,GPIO_MODE_DEF_INPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(DataReadyInterupt,GPIO_FLOATING));
-    ESP_LOGI(TAG2, "Interupts configured");
+    //ESP_LOGI(TAG2, "Interupts configured");
     ESP_ERROR_CHECK(gpio_install_isr_service(0));
-    ESP_LOGI(TAG2, "Interupt service installed");
+    //ESP_LOGI(TAG2, "Interupt service installed");
     ESP_ERROR_CHECK(gpio_isr_handler_add(DataReadyInterupt, InterruptRoutine, (void *) DataReadyInterupt));
     return ESP_OK;
 }
@@ -228,7 +228,7 @@ static esp_err_t Afe4404InitializePowerUp(){
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,0));
     ets_delay_us(35000);
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
-    ESP_LOGI(TAG2, "Done I2C Hard Slave Powerup!");
+    //ESP_LOGI(TAG2, "Done I2C Hard Slave Powerup!");
     vTaskDelay(100 / portTICK_RATE_MS);
     I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     return ESP_OK;
