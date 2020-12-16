@@ -18,6 +18,7 @@
 
 static const char *TAG = "ProjectHeartBeats";
 
+// Building of the request from the given char-arrays in the h-file. currently only array's as 2e element
 static void InitArays(uint16_t sizeData, uint32_t *Data){
     uint32_t RequestSize = sizeof(REQUEST)/sizeof(REQUEST[0]);
     if(endHttpPart < 67){
@@ -75,6 +76,7 @@ static void InitArays(uint16_t sizeData, uint32_t *Data){
     snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[4]]);
 }
 
+// getting the data from the spo2 sensor and putting the data in the request
 static void BuildRequest(){
     uint32_t DataSamplesAFE[DataSampleSize];
     AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
@@ -83,6 +85,8 @@ static void BuildRequest(){
     ESP_LOGI("Request: \r\n",REQUEST);
 }
 
+
+// this is example code and needs to be put in it's own class
 static void http_post(void *pvParameters){
     const struct addrinfo hints = {
         .ai_family = AF_INET,
@@ -96,7 +100,7 @@ static void http_post(void *pvParameters){
     unsigned int k = 0;
     while(k<1){
 
-        BuildRequest();
+        BuildRequest(); //mod
 
         int err = getaddrinfo(WebServer, WebPort, &hints, &res);
 
@@ -175,6 +179,7 @@ static void http_post(void *pvParameters){
     }
 }
 
+//Here we need cleanup of all the touble shooting code
 void app_main(){
     ESP_LOGI(TAG,"StartCode");
     ESP_ERROR_CHECK(Afe4404Init());

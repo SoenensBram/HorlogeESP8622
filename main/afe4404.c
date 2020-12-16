@@ -148,7 +148,7 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     return ESP_OK;
 }
 
-
+//Routine that gets exicuted when the device interupt is called
 static void InterruptRoutine(void* arg){
     uint32_t gpio_num = (uint32_t) arg;
     xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
@@ -199,7 +199,7 @@ static esp_err_t MasterAfe4404InitializePorts(){
     return ESP_OK;
 }
 
-
+//initialize the dataReady interupt, this only needs to be called once on boot
 static esp_err_t InitInteruptPortDataReady(){
     gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
     ESP_ERROR_CHECK(gpio_set_intr_type(DataReadyInterupt,GPIO_INTR_POSEDGE));
