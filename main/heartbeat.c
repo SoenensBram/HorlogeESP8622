@@ -75,6 +75,14 @@ static void InitArays(uint16_t sizeData, uint32_t *Data){
     snprintf(&REQUEST[startJson],RequestSize-startJson,&Json[locationJson[4]]);
 }
 
+static void BuildRequest(){
+    uint32_t DataSamplesAFE[DataSampleSize];
+    AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
+    //ESP_LOGI(TAG, "AFE array aquired");
+    InitArays(DataSampleSize, &DataSamplesAFE);
+    ESP_LOGI("Request: \r\n",REQUEST);
+}
+
 static void http_post(void *pvParameters){
     const struct addrinfo hints = {
         .ai_family = AF_INET,
@@ -87,6 +95,8 @@ static void http_post(void *pvParameters){
 
     unsigned int k = 0;
     while(k<1){
+
+        BuildRequest();
 
         int err = getaddrinfo(WebServer, WebPort, &hints, &res);
 
@@ -165,13 +175,6 @@ static void http_post(void *pvParameters){
     }
 }
 
-static void BuildRequest(void *pvParameters){
-    uint32_t DataSamplesAFE[DataSampleSize];
-    AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
-    InitArays(DataSampleSize, &DataSamplesAFE);
-    //ESP_LOGI("Request: \r\n",REQUEST);
-}
-
 void app_main(){
     ESP_LOGI(TAG,"StartCode");
     ESP_ERROR_CHECK(Afe4404Init());
@@ -181,7 +184,6 @@ void app_main(){
     //char tmepem[16];
     //sprintf(tmepem,"%u",bob);
     //ESP_LOGI("Printing BOB: ", tmepem);
-    xTaskCreate(&BuildRequest, "build request", 40000, NULL, 5, NULL);
     //remove isr handler for gpio number.
     //gpio_isr_handler_remove(DataReadyInterupt);
     //hook isr handler for specific gpio pin again
@@ -198,7 +200,7 @@ void app_main(){
     //    EspSpo2Data();
     //}
     
-/*    
+  
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -206,8 +208,8 @@ void app_main(){
 
     ESP_ERROR_CHECK(example_connect());
 
-    xTaskCreate(&http_post, "http_get_task", 32000, NULL, 5, NULL);
-*/
+    xTaskCreate(&http_post, "http_get_task", 40000, NULL, 5, NULL);
+
 
     //ESP_ERROR_CHECK(Afe4404PowerUp());
 

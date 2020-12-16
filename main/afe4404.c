@@ -219,7 +219,7 @@ static esp_err_t InitInteruptPortDataReady(){
  */
 static esp_err_t Afe4404InitializePowerUp(){
     ets_delay_us(100000);
-    ESP_ERROR_CHECK(gpio_set_level(PowerEnable,UINT32_MAX));
+    ESP_ERROR_CHECK(gpio_set_level(PowerEnable,0));
     ets_delay_us(100000);
     ESP_ERROR_CHECK(gpio_set_level(RxSupplyEnable,UINT32_MAX));
     ets_delay_us(10000);
@@ -249,7 +249,7 @@ static esp_err_t Afe4404PowerUp(){
 
 //Power AFe down
 static esp_err_t Afe4404PowerDown(){
-    ESP_ERROR_CHECK(gpio_set_level(PowerEnable,0));
+    ESP_ERROR_CHECK(gpio_set_level(PowerEnable,UINT32_MAX));
     ESP_ERROR_CHECK(gpio_set_level(RxSupplyEnable,0));
     ESP_ERROR_CHECK(gpio_set_level(TxSupplyEnable,0));
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,0));
@@ -285,5 +285,6 @@ static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
         }
     }
     Afe4404PowerDown();
+    //ESP_LOGI(TAG2, "AFE array written");
 }
 
