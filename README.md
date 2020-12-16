@@ -1,18 +1,3 @@
-# TODO:
-## PCB:
-### Change mosfets to n-channel
-### Link: https://easyeda.com/skyper100mc/espwatch
-## Code:
-### Refactor for open/closed behavior
-Refactor for this behavior and better documentation of the code. Also splitting the code up into more *classes* so that the code is less confusing to read.
-### Implemnet debug setting
-Implementing of a debug stetting for easier debuging code.
-### Sensor tuning
-Tunning the settings for the sensor so the readout data is more accurate.
-### Implementing battery management
-We have chosen a chip for battery management. But we haven't implemented it yet.
-### Implement Power management
-
 # How to flash the code on to the ESP8266
 ## First you must install the following toolchain, it consists of 2 parts:
 ### ESP8266_RTOS_SDK: https://github.com/espressif/ESP8266_RTOS_SDK
@@ -35,3 +20,22 @@ The used SPO2 sensor and chip used for testing where the afe4404 (adc/controller
 
 ## Fysical connection on the pcb
 ![Fysical connections to the esp8266](Images/scheme2.png)
+
+# TODO:
+## PCB:
+### Change mosfets to n-channel
+### Link: https://easyeda.com/skyper100mc/espwatch
+## Code:
+### Refactor for open/closed behavior
+Refactor for this behavior and better documentation of the code. Also splitting the code up into more *classes* so that the code is less confusing to read.
+#### I2C code needs to be split off
+I2C code needs to be split off so we can use it for implementing the battery management.
+#### Wifi, http request code
+This code needs to be moved to separate file and the functionality revised for using in our application.
+### Implement debug setting
+Implementing of a debug stetting for easier debuging code.
+### Sensor tuning
+Tunning the settings for the sensor so the readout data is more accurate.
+### Implementing battery management
+We have chosen a chip for battery management. But we haven't implemented it yet.
+### Implement Power management
