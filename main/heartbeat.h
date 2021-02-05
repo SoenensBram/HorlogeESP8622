@@ -8,12 +8,12 @@
 
 char 
 REQUEST[6400],                                                              // allocated space for putting the request
-*WebServer =           "192.168.004.030",                                   // ipaddress or name of the target server
+*WebServer =           "192.168.7.40",                                   // ipaddress or name of the target server
 *WebPort =             "8000",                                              // target port for posting the data
 *Path =                "/stress/meting  ",                                  // Path that is added after the name/address and port to build the post link
-*JsonElement1 =        "PersonID",                                          // Identifier for the current watch
-*JsonData1 =           "1",                                                 // Value of Identifier for the current watch
-*JsonElement2 =        "SampleData",                                        // Identifier for the data that is read from teh senor
+JsonElement[][] = {{"Led1"},{"Led1Ambiant"},{"Led2"},{"Led2Ambiant"}};      // Identifier for the data that is read from teh senor
+//*JsonElement1 =        "Led1",                                              
+//*JsonElement2 =        "Led1Ambiant",                                       // Identifier for the data that is read from teh senor
 Get[]  = "GET  http:// HTTP/1.0\r\nHost: \r\nUser-Agent: esp-idf/1.0 esp8266\r\n\r\n",      //static parts to build a get request
 Post[] = "POST http:// HTTP/1.0\r\nHost: \r\nUser-Agent: esp-idf/1.0 esp8266\r\n",          //static parts to build a post request
 Json[] = "Content-Length: \r\nContent-Type: application/json\r\n\r\n{\"\":,\"\":}",         //static parts of a json to add at hte end of a request
@@ -32,5 +32,5 @@ locationJson[] = {                                  //Locations in the static ar
     };
 uint32_t endHttpPart = 0;                           //position tracker for tracking the position in het request array of where the http request ends and the json part starts
 bool IsPost = 1;                                    //Are we building a post(=1) or a get(=0)
-uint16_t DataSampleSize = 512;                      //amount of datasamples that needs to be sampled
+uint16_t DataSampleSize = 2048;                      //amount of datasamples that needs to be sampled
 enum Sensor sensorData = Led1;                      //The chosen sensor where the data is comming from. {Led2, aLed2, Led1, aLed1, diffLed2, diffLed1, AvgDiffLed2, AvgDiffLed1}

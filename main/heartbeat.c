@@ -82,7 +82,7 @@ static void BuildRequest(){
     AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
     //ESP_LOGI(TAG, "AFE array aquired");
     InitArays(DataSampleSize, &DataSamplesAFE);
-    ESP_LOGI("Request: \r\n",REQUEST);
+    //ESP_LOGI("Request: \r\n",REQUEST);
 }
 
 
@@ -98,9 +98,13 @@ static void http_post(void *pvParameters){
     char recv_buf[64];
 
     unsigned int k = 0;
+
+    //while(1)BuildRequest();
+
     while(k<1){
 
         BuildRequest(); //mod
+        ESP_LOGI("Request data", REQUEST);
 
         int err = getaddrinfo(WebServer, WebPort, &hints, &res);
 
@@ -136,7 +140,6 @@ static void http_post(void *pvParameters){
         ESP_LOGI(TAG, "... connected");
         freeaddrinfo(res);
 
-        ESP_LOGI(TAG, REQUEST);
 
         if (write(s, REQUEST, strlen(REQUEST)) < 0) {
             ESP_LOGE(TAG, "... socket send failed");
