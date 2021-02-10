@@ -1,3 +1,3 @@
-set(COMPONENT_SRCS "heartbeat.c" "afe4404.c")
+set(COMPONENT_SRCS "httpComBuild.c" "heartbeat.c" "afe4404.c")
 
 register_component()
