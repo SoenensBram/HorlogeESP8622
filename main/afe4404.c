@@ -279,9 +279,10 @@ static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
     Afe4404PowerUp();
     uint i = 0;
     while (i<size){
-        if(DataReadyCount>10){
+        if(DataReadyCount>10 && DataReady == true){
             Data[i] = AfeGetData(readout);
             i++;
+            DataReady = false;
         }
     }
     Afe4404PowerDown();
