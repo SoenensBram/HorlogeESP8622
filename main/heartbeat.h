@@ -33,4 +33,4 @@ locationJson[] = {                                  //Locations in the static ar
 uint32_t endHttpPart = 0;                           //position tracker for tracking the position in het request array of where the http request ends and the json part starts
 bool IsPost = 1;                                    //Are we building a post(=1) or a get(=0)
 uint16_t DataSampleSize = 512;                      //amount of datasamples that needs to be sampled
-enum Sensor sensorData = Led1;                      //The chosen sensor where the data is comming from. {Led2, aLed2, Led1, aLed1, diffLed2, diffLed1, AvgDiffLed2, AvgDiffLed1}
+enum Sensor sensorData = diffLed1;                      //The chosen sensor where the data is comming from. {Led2, aLed2, Led1, aLed1, diffLed2, diffLed1, AvgDiffLed2, AvgDiffLed1}

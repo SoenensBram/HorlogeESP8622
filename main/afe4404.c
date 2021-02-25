@@ -275,7 +275,7 @@ static uint32_t AfeGetData(enum Sensor readout){
 }
 
 //Only methode that needs to be called to read an array of results
-static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
+static void AfeGetDataArray(uint16_t size, int32_t *Data, enum Sensor readout){
     Afe4404PowerUp();
     uint i = 0;
     while (i<size){

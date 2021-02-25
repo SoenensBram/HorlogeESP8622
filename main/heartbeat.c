@@ -78,7 +78,7 @@ static void InitArays(uint16_t sizeData, uint32_t *Data){
 
 // getting the data from the spo2 sensor and putting the data in the request
 static void BuildRequest(){
-    uint32_t DataSamplesAFE[DataSampleSize];
+    int32_t DataSamplesAFE[DataSampleSize];
     AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
     //ESP_LOGI(TAG, "AFE array aquired");
     InitArays(DataSampleSize, &DataSamplesAFE);
