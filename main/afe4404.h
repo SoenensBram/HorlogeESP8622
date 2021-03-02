@@ -53,33 +53,33 @@ uint8_t GetAddress[8];
 uint32_t Value[] =  {       /************************************Setting in registers of AFE4404************************************************/
 0,                 //SW_RESET, TM_COUNT_RST, REG_READ
 100,                //LED2STC
-399,               //LED2ENDC
-802,               //LED1LEDSTC
-1201,              //LED1LEDENDC
-501,               //ALED2STC/LED3STC
-800,               //ALED2ENDC/LED3ENDC
-902,               //LED1STC
-1201,              //LED1ENDC
+398,               //LED2ENDC
+800,               //LED1LEDSTC
+1198,              //LED1LEDENDC
+500,               //ALED2STC/LED3STC
+798,               //ALED2ENDC/LED3ENDC
+900,               //LED1STC
+1198,              //LED1ENDC
 0,                 //LED2LEDSTC
-399,               //LED2LEDENDC
-1303,              //ALED1STC
-1602,              //ALED1ENDC
-409,               //LED2CONVST
-1468,              //LED2CONVEND
-1478,              //ALED2CONVST\LED3CONVST
-2537,              //ALED2CONVEND\LED3CONVEND
-2547,              //LED1CONVST
-3606,              //LED1CONVEND
-3616,              //ALED1CONVST
-4675,              //ALED1CONVEND
-401,               //ADCRSTSTCT0
-407,               //ADCRSTENDCT0
-1470,              //ADCRSTSTCT1
-1476,              //ADCRSTENDCT1
-2539,              //ADCRSTSTCT2
-2545,              //ADCRSTENDCT2
-3608,              //ADCRSTSTCT3
-3614,              //ADCRSTENDCT3
+398,               //LED2LEDENDC
+1300,              //ALED1STC
+1598,              //ALED1ENDC
+5608,               //LED2CONVST
+6067,              //LED2CONVEND
+6077,              //ALED2CONVST\LED3CONVST
+6536,              //ALED2CONVEND\LED3CONVEND
+6546,              //LED1CONVST
+7006,              //LED1CONVEND
+7016,              //ALED1CONVST
+7475,              //ALED1CONVEND
+5600,               //ADCRSTSTCT0
+5606,               //ADCRSTENDCT0
+6069,              //ADCRSTSTCT1
+6075,              //ADCRSTENDCT1
+6538,              //ADCRSTSTCT2
+6544,              //ADCRSTENDCT2
+7008,              //ADCRSTSTCT3
+7014,              //ADCRSTENDCT3
 39999,               //PRPCT
 259,               //TIMEREN, NUMAV
 32771,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP
@@ -94,12 +94,12 @@ uint32_t Value[] =  {       /************************************Setting in regi
 0,       //read only LED2-ALED2VAL
 0,       //read only LED1-ALED1VAL
 0,                 //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
-5475,              //PDNCYCLESTC
+7675,              //PDNCYCLESTC
 39199,             //PDNCYCLEENDC
 0,                 //PROG_TG_STC
 0,                 //PROG_TG_ENDC
-409,               //LED3LEDSTC
-800,               //LED3LEDENDC
+400,               //LED3LEDSTC
+798,               //LED3LEDENDC
 1,                 //CLKDIV_PRF
 0,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
 0,                 //DEC_EN, DEC_FACTOR
