@@ -267,15 +267,15 @@ static esp_err_t Afe4404Init(){
 }
 
 //getting data from a single sensor
-static uint32_t AfeGetData(enum Sensor readout){
-    uint32_t data1;
+static int32_t AfeGetData(enum Sensor readout){
+    int32_t data1;
     uint8_t length = 24;
     I2cMasterAfe4404Read(GetAddress[readout], &data1, length);
     return data1;
 }
 
 //Only methode that needs to be called to read an array of results
-static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
+static void AfeGetDataArray(uint16_t size, int32_t *Data, enum Sensor readout){
     Afe4404PowerUp();
     uint i = 0;
     while (i<size){
