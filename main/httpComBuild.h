@@ -9,3 +9,4 @@ Post[][]= {{"POST "},{" http://"},{" HTTP/1.0\r\nHost:"},{" \r\nUser-Agent:"},{"
 Json[][]= {{"Content-Length:"},{" \r\nContent-Type:"},{""},{" application/json\r\n\r\n{"}},
 JsonFormating[][] = {{"\""},{"\":"},{",\""}},
 JsonData[8192];  
+uint16_t RequestSize = 8192; 

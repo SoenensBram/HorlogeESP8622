@@ -15,11 +15,30 @@
 #include <sys/socket.h>
 #include "httpComBuild.h"
 
-static void InitPost(){
-    
+static void InitPost(char *httpPost, char *Request){
+    for(uint16_t i = 0; i < sizeof(httpPost)/sizeof(httpPost[0]);i++){
+        snprintf(REQUEST,sizeof(REQUEST)/sizeof(REQUEST[0]),httpPost[i]);
+    }
 }
 
-static void InitArays(uint16_t sizeData, uint32_t *Data){
+static uint16_t ArrayBuilderJson(uint16_t sizeData, int32_t *Data, char *Array){
+    uint16_t sizeDataArray = 0;
+    snprintf(Array,sizeof(Array)/sizeof(Array[0]),"[");
+    for(uint16_t i = 0; i < sizeData);i++){
+        sizeDataArray = sizeDataArray + snprintf(Array,RequestSize,"%d",Data[i]);
+    }
+    snprintf(Array,sizeof(Array)/sizeof(Array[0]),"]");
+}
+
+static void BuildJson(char *Request){
+    for(uint16_t i = 0; i < sizeData);i++){
+        sprintf(Request,"%d,",Data[i]);
+    }
+}
+
+static void InitArays(uint16_t sizeData, int32_t *Data){}
+
+static void InitArays(uint16_t sizeData, int32_t *Data){
     uint32_t RequestSize = sizeof(REQUEST)/sizeof(REQUEST[0]);
     if(endHttpPart < 67){
         if(IsPost){
