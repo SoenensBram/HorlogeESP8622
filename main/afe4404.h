@@ -52,41 +52,41 @@ unsigned int RegisterEnteriesAfe4404 = 54;
 uint8_t GetAddress[8];
 uint32_t Value[] =  {       /************************************Setting in registers of AFE4404************************************************/
 0,                 //SW_RESET, TM_COUNT_RST, REG_READ
-100,                //LED2STC
-398,               //LED2ENDC
-800,               //LED1LEDSTC
-1198,              //LED1LEDENDC
-500,               //ALED2STC/LED3STC
-798,               //ALED2ENDC/LED3ENDC
-900,               //LED1STC
-1198,              //LED1ENDC
-0,                 //LED2LEDSTC
-398,               //LED2LEDENDC
-1300,              //ALED1STC
-1598,              //ALED1ENDC
-5608,               //LED2CONVST
-6067,              //LED2CONVEND
-6077,              //ALED2CONVST\LED3CONVST
-6536,              //ALED2CONVEND\LED3CONVEND
-6546,              //LED1CONVST
-7006,              //LED1CONVEND
-7016,              //ALED1CONVST
-7475,              //ALED1CONVEND
-5600,               //ADCRSTSTCT0
-5606,               //ADCRSTENDCT0
-6069,              //ADCRSTSTCT1
-6075,              //ADCRSTENDCT1
-6538,              //ADCRSTSTCT2
-6544,              //ADCRSTENDCT2
-7008,              //ADCRSTSTCT3
-7014,              //ADCRSTENDCT3
+80,                //LED2STC *
+399,               //LED2ENDC6 *
+800,               //LED1LEDSTC *
+1199,              //LED1LEDENDC *
+480,               //ALED2STC/LED3STC *
+799,               //ALED2ENDC/LED3ENDC *
+880,               //LED1STC *
+1199,              //LED1ENDC *
+0,                 //LED2LEDSTC *
+399,               //LED2LEDENDC *
+1279,              //ALED1STC *
+1598,              //ALED1ENDC  *
+408,               //LED2CONVST *
+1467,              //LED2CONVEND *
+1476,              //ALED2CONVST\LED3CONVST *
+2535,              //ALED2CONVEND\LED3CONVEND *
+2544,              //LED1CONVST *
+3603,              //LED1CONVEND *
+3612,              //ALED1CONVST *
+4671,              //ALED1CONVEND *
+401,               //ADCRSTSTCT0 *
+407,               //ADCRSTENDCT0 * 
+1469,              //ADCRSTSTCT1 *
+1475,              //ADCRSTENDCT1 *
+2537,              //ADCRSTSTCT2 *
+2543,              //ADCRSTENDCT2 *
+3605,              //ADCRSTSTCT3 *
+3611,              //ADCRSTENDCT3 *
 39999,               //PRPCT
-256,               //TIMEREN, NUMAV
-32771,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP
-3,                 //PROG_TG_EN, TIA_CF, TIA_GAIN
-262143,             //ILED3,ILED2, ILED1
+259,               //TIMEREN, NUMAV *
+32772,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP *
+3,                 //PROG_TG_EN, TIA_CF, TIA_GAIN *
+262143,             //ILED3,ILED2, ILED1 *
 512,               //DYNAMIC1, ILED_2X, DYNAMIC2, OSC_ENABLE, DYNAMIC3, DYNAMIC4, PDNRX, PDNAFE
-0,               //ENABLE_CLKOUT, CLKDIV_CLKOUT
+4,               //ENABLE_CLKOUT, CLKDIV_CLKOUT *
 0,       //read only LED2VAL
 0,       //read only ALED2VAL\LED3VAL
 0,       //read only LED1VAL
@@ -94,17 +94,17 @@ uint32_t Value[] =  {       /************************************Setting in regi
 0,       //read only LED2-ALED2VAL
 0,       //read only LED1-ALED1VAL
 32,                 //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
-7675,              //PDNCYCLESTC
-39199,             //PDNCYCLEENDC
+5471,              //PDNCYCLESTC *
+39199,             //PDNCYCLEENDC *
 0,                 //PROG_TG_STC
 0,                 //PROG_TG_ENDC
 400,               //LED3LEDSTC
-798,               //LED3LEDENDC
-5,                 //CLKDIV_PRF
-541200,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
+799,               //LED3LEDENDC
+1,                 //CLKDIV_PRF *
+1048575,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
 46,                 //DEC_EN, DEC_FACTOR
 0,       //read only AVG_LED2-ALED2VAL
-0};      //read only AVG_LED1-ALED1VAL
+0};     //read only AVG_LED1-ALED1VAL
 uint8_t Address[] = {       /************************************Adress in registers of AFE4404 for the above settings************************************************/
 0x00,              //SW_RESET, TM_COUNT_RST, REG_READ
 0x01,              //LED2STC

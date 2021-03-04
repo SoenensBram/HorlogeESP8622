@@ -51,7 +51,7 @@ static void InitArays(uint16_t sizeData, uint32_t *Data){
     uint16_t jsonLocation = snprintf(JsonData,jsonSize,"[");
     char tempChar[8];
     for(uint16_t i = 0; i < sizeData;i++){ //["ele1", "ele2", "ele3"]
-        sprintf(tempChar,"%u,",Data[i]);
+        sprintf(tempChar,"%d,",Data[i]);
         jsonLocation = jsonLocation + snprintf(&JsonData[jsonLocation],jsonSize-jsonLocation,tempChar);
     };
     snprintf(&JsonData[jsonLocation-1],jsonSize-jsonLocation,"]");
