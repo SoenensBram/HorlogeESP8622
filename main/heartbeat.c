@@ -19,7 +19,7 @@
 static const char *TAG = "ProjectHeartBeats";
 
 // Building of the request from the given char-arrays in the h-file. currently only array's as 2e element
-static void InitArays(uint16_t sizeData, uint32_t *Data){
+static void InitArays(uint16_t sizeData, int32_t *Data){
     uint32_t RequestSize = sizeof(REQUEST)/sizeof(REQUEST[0]);
     if(endHttpPart < 67){
         if(IsPost){
