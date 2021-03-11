@@ -279,14 +279,6 @@ static uint32_t AfeGetData(enum Sensor readout){
     uint32_t data1=0;
     uint8_t length = 3;
     I2cMasterAfe4404Read(GetAddress[readout], &data1, length);
-    //if (GetAddress[readout] >= 0x2A && GetAddress[readout] <= 0x2F){
-    //if (data1 & 0x00200000)  // check if the ADC value is positive or negative
-    //{
-    //  data1 = data1 & 0x003FFFFF;   // convert it to a 22 bit value
-    //  return (data1^0xFFC00000);
-    //}
-    //return 1;
-    //}
     return data1;
 }
 

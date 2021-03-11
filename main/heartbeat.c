@@ -79,9 +79,9 @@ static void InitArays(uint16_t sizeData, uint32_t *Data){
 // getting the data from the spo2 sensor and putting the data in the request
 static void BuildRequest(){
     uint32_t DataSamplesAFE[DataSampleSize];
-    AfeGetDataArray(DataSampleSize, &DataSamplesAFE, sensorData);
+    AfeGetDataArray(DataSampleSize, DataSamplesAFE, sensorData);
     //ESP_LOGI(TAG, "AFE array aquired");
-    InitArays(DataSampleSize, &DataSamplesAFE);
+    InitArays(DataSampleSize, DataSamplesAFE);
     ESP_LOGI("Request: \r\n",REQUEST);
 }
 
@@ -183,19 +183,19 @@ static void http_post(void *pvParameters){
 void app_main(){
     ESP_LOGI(TAG,"StartCode");
     ESP_ERROR_CHECK(Afe4404Init());
-    Afe4404PowerUp();
+   /* Afe4404PowerUp();
     uint32_t bob =0;
     while(1){
         bob = AfeGetData(sensorData);
         bob = bob/200;
         ESP_LOGI("bob","$%u;",bob);
-        /*    uint8_t configData[3];
+            uint8_t configData[3];
             configData[0]=(uint8_t)(Value[5] >>16);
             configData[1]=(uint8_t)(((Value[5] & 0x00FFFF) >>8));
             configData[2]=(uint8_t)(((Value[5] & 0x0000FF)));
-        I2cMasterAfe4404Write(Address[5], configData, 3);*/
+        I2cMasterAfe4404Write(Address[5], configData, 3);
         vTaskDelay(100/portTICK_PERIOD_MS);
-    }
+    }*/
     //char bruh[10] = "bruh";
     //int bob = 30;
     //ESP_LOGI("Printing BRUH: ", bruh);
@@ -218,7 +218,7 @@ void app_main(){
     //    EspSpo2Data();
     //}
     
-  /*
+  
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -227,7 +227,7 @@ void app_main(){
     ESP_ERROR_CHECK(example_connect());
 
     xTaskCreate(&http_post, "http_get_task", 40000, NULL, 5, NULL);
-*/
+
 
     //ESP_ERROR_CHECK(Afe4404PowerUp());
 
