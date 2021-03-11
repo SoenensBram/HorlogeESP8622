@@ -183,6 +183,7 @@ static void http_post(void *pvParameters){
 void app_main(){
     ESP_LOGI(TAG,"StartCode");
     ESP_ERROR_CHECK(Afe4404Init());
+    Afe4404PowerUp();
     //char bruh[10] = "bruh";
     //int bob = 30;
     //ESP_LOGI("Printing BRUH: ", bruh);
@@ -200,20 +201,20 @@ void app_main(){
     //b     vTaskDelay(1 / portTICK_RATE_MS);
     //b }
 
-    //while (1){
-    //    vTaskDelay(10000 / portTICK_PERIOD_MS);
-    //    EspSpo2Data();
-    //}
+    while (1){
+       vTaskDelay(100 / portTICK_PERIOD_MS);
+       EspSpo2Data();
+    }
     
   
-    ESP_ERROR_CHECK(nvs_flash_init());
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    // ESP_ERROR_CHECK(nvs_flash_init());
+    // ESP_ERROR_CHECK(esp_netif_init());
+    // ESP_ERROR_CHECK(esp_event_loop_create_default());
 
 
-    ESP_ERROR_CHECK(example_connect());
+    // ESP_ERROR_CHECK(example_connect());
 
-    xTaskCreate(&http_post, "http_get_task", 40000, NULL, 5, NULL);
+    // xTaskCreate(&http_post, "http_get_task", 40000, NULL, 5, NULL);
 
 
     //ESP_ERROR_CHECK(Afe4404PowerUp());

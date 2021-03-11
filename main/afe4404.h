@@ -82,10 +82,10 @@ uint32_t Value[] =  {       /************************************Setting in regi
 3611,              //ADCRSTENDCT3 *
 39999,               //PRPCT
 259,               //TIMEREN, NUMAV *
-0,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP *
-63,                 //PROG_TG_EN, TIA_CF, TIA_GAIN *
-128991,             //ILED3,ILED2, ILED1 *
-1065496,               //DYNAMIC1, ILED_2X, DYNAMIC2, OSC_ENABLE, DYNAMIC3, DYNAMIC4, PDNRX, PDNAFE
+32772,             //ENSEPGAIN, TIA_CF_SEP, TIAGAIN_SEP *
+3,                 //PROG_TG_EN, TIA_CF, TIA_GAIN *
+12495,             //ILED3,ILED2, ILED1 *
+512,               //DYNAMIC1, ILED_2X, DYNAMIC2, OSC_ENABLE, DYNAMIC3, DYNAMIC4, PDNRX, PDNAFE
 4,               //ENABLE_CLKOUT, CLKDIV_CLKOUT *
 0,       //read only LED2VAL
 0,       //read only ALED2VAL\LED3VAL
@@ -93,18 +93,18 @@ uint32_t Value[] =  {       /************************************Setting in regi
 0,       //read only ALED1VAL
 0,       //read only LED2-ALED2VAL
 0,       //read only LED1-ALED1VAL
-0,                 //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
+32,                 //PD_DISCONNECT, ENABLE_INPUT_SHORT, CLKDIV_EXTMODE
 5471,              //PDNCYCLESTC *
 39199,             //PDNCYCLEENDC *
 0,                 //PROG_TG_STC
 0,                 //PROG_TG_ENDC
 400,               //LED3LEDSTC
 799,               //LED3LEDENDC
-0,                 //CLKDIV_PRF *
+1,                 //CLKDIV_PRF *
 1048575,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
-0,                 //DEC_EN, DEC_FACTOR
+46,                 //DEC_EN, DEC_FACTOR
 0,       //read only AVG_LED2-ALED2VAL
-0};     //read only AVG_LED1-ALED1VAL
+0};      //read only AVG_LED1-ALED1VAL
 uint8_t Address[] = {       /************************************Adress in registers of AFE4404 for the above settings************************************************/
 0x00,              //SW_RESET, TM_COUNT_RST, REG_READ
 0x01,              //LED2STC
@@ -215,4 +215,5 @@ true,             //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AM
 true,             //DEC_EN, DEC_FACTOR
 false,   //read only AVG_LED2-ALED2VAL
 false};  //read only AVG_LED1-ALED1VAL
+
 
