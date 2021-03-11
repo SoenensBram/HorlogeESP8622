@@ -61,7 +61,7 @@ static esp_err_t I2cMasterInit(){
  *     - ESP_ERR_INVALID_STATE I2C driver not installed or not in master mode.
  *     - ESP_ERR_TIMEOUT Operation timeout because the bus is busy.
  */
-static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint8_t *Data, size_t DataLength){
+static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint32_t *Data, size_t DataLength){
     int returnValue;
     i2c_cmd_handle_t commandI2c = i2c_cmd_link_create();
     i2c_master_start(commandI2c);
@@ -100,8 +100,9 @@ static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint8_t *Data, s
  *     - ESP_ERR_INVALID_STATE I2C driver not installed or not in master mode.
  *     - ESP_ERR_TIMEOUT Operation timeout because the bus is busy.
  */
-static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, size_t DataLength){
+static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint32_t *Data, size_t DataLength){
     int returnValue;
+    uint8_t configData[3];
     //ESP_LOGI(TAG2, "I2C Read!");
     i2c_cmd_handle_t commandI2c = i2c_cmd_link_create();
     i2c_master_start(commandI2c);
@@ -114,10 +115,13 @@ static esp_err_t I2cMasterAfe4404Read(uint8_t RegisterAddress, uint8_t *Data, si
     commandI2c = i2c_cmd_link_create();
     i2c_master_start(commandI2c);
     i2c_master_write_byte(commandI2c, Afe4404Address | I2C_MASTER_READ, AckCheckEn);
-    i2c_master_read(commandI2c, Data, DataLength, LastNackVal);
+    i2c_master_read(commandI2c, configData, DataLength, LastNackVal);
     i2c_master_stop(commandI2c);
     returnValue = i2c_master_cmd_begin(I2cMasterNum, commandI2c, 1000 / portTICK_RATE_MS);
     i2c_cmd_link_delete(commandI2c);
+    *Data = configData[0];
+    *Data = (*Data << 8) | configData[1];
+    *Data = (*Data << 8) | configData[2];
     return returnValue;
 }
 
@@ -138,7 +142,11 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     uint8_t j = 0;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(WriteableRegister[i]){
-            ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], &Value[i], 3));
+            uint8_t configData[3];
+            configData[0]=(uint8_t)(Value[i] >>16);
+            configData[1]=(uint8_t)(((Value[i] & 0x00FFFF) >>8));
+            configData[2]=(uint8_t)(((Value[i] & 0x0000FF)));
+            ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], configData, 3));
         }else{
             GetAddress[j] = Address[i];
             j ++;
@@ -162,7 +170,7 @@ static void InterruptRoutine(void* arg){
  */
 static void EspSpo2Data(){;
     uint32_t data1;
-    uint8_t length = 24;
+    uint8_t length = 3;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(!WriteableRegister[i]){
             I2cMasterAfe4404Read(Address[i], &data1, length);
@@ -230,7 +238,7 @@ static esp_err_t Afe4404InitializePowerUp(){
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
     //ESP_LOGI(TAG2, "Done I2C Hard Slave Powerup!");
     vTaskDelay(100 / portTICK_RATE_MS);
-    I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
+    //I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     return ESP_OK;
 }
 
@@ -267,15 +275,23 @@ static esp_err_t Afe4404Init(){
 }
 
 //getting data from a single sensor
-static int32_t AfeGetData(enum Sensor readout){
-    int32_t data1;
-    uint8_t length = 24;
+static uint32_t AfeGetData(enum Sensor readout){
+    uint32_t data1=0;
+    uint8_t length = 3;
     I2cMasterAfe4404Read(GetAddress[readout], &data1, length);
+    //if (GetAddress[readout] >= 0x2A && GetAddress[readout] <= 0x2F){
+    //if (data1 & 0x00200000)  // check if the ADC value is positive or negative
+    //{
+    //  data1 = data1 & 0x003FFFFF;   // convert it to a 22 bit value
+    //  return (data1^0xFFC00000);
+    //}
+    //return 1;
+    //}
     return data1;
 }
 
 //Only methode that needs to be called to read an array of results
-static void AfeGetDataArray(uint16_t size, int32_t *Data, enum Sensor readout){
+static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
     Afe4404PowerUp();
     uint i = 0;
     while (i<size){
