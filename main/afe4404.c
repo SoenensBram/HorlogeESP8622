@@ -65,15 +65,11 @@ static esp_err_t I2cMasterInit(){
  */
 static esp_err_t I2cMasterAfe4404Write(uint8_t RegisterAddress, uint32_t *Data, size_t DataLength){
     int returnValue;
-    uint8_t writeData[DataLength];
-    for(uint i = 0; i<DataLength; i++){
-        writeData[i] = (*Data >> (8*i));
-    }
     i2c_cmd_handle_t commandI2c = i2c_cmd_link_create();
     i2c_master_start(commandI2c);
     i2c_master_write_byte(commandI2c, Afe4404Address| I2C_MASTER_WRITE, AckCheckEn);
     i2c_master_write_byte(commandI2c, RegisterAddress, AckCheckEn);
-    i2c_master_write(commandI2c, writeData, DataLength, AckCheckEn);
+    i2c_master_write(commandI2c, Data, DataLength, AckCheckEn);
     i2c_master_stop(commandI2c);
     returnValue = i2c_master_cmd_begin(I2cMasterNum, commandI2c, 1000 / portTICK_RATE_MS);
     i2c_cmd_link_delete(commandI2c);
@@ -148,8 +144,12 @@ static esp_err_t I2cMasterAfe4404InitializeRegister(){
     uint8_t j = 0;
     for(unsigned int i = 0; i < RegisterEnteriesAfe4404; i++){
         if(WriteableRegister[i]){
-            ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], Value[i], 3));
-        }else{
+             uint8_t configData[3];
+            configData[0]=(uint8_t)(Value[i] >>16);
+            configData[1]=(uint8_t)(((Value[i] & 0x00FFFF) >>8));
+            configData[2]=(uint8_t)(((Value[i] & 0x0000FF)));
+            ESP_ERROR_CHECK(I2cMasterAfe4404Write(Address[i], configData, 3));
+            }else{
             GetAddress[j] = Address[i];
             j ++;
         }
