@@ -100,7 +100,7 @@ uint32_t Value[] =  {       /************************************Setting in regi
 0,                 //PROG_TG_ENDC
 400,               //LED3LEDSTC
 799,               //LED3LEDENDC
-1,                 //CLKDIV_PRF *
+6,                 //CLKDIV_PRF *
 0,                 //POL_OFFDAC_LED2, I_OFFDAC_LED2, POL_OFFDAC_AMB1, I_OFFDAC_AMB1, POL_OFFDAC_LED1, I_OFFDAC_LED1, POL_OFFDAC_AMB2/POL_OFFDAC_LED3, I_OFFDAC_AMB2/I_OFFDAC_LED3
 0,                 //DEC_EN, DEC_FACTOR
 0,       //read only AVG_LED2-ALED2VAL

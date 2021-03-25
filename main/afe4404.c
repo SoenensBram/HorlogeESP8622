@@ -5,6 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
+#include "esp_task_wdt.h"
 
 #include "esp_log.h"
 #include "esp_system.h"
@@ -327,9 +328,10 @@ static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
     Afe4404PowerUp();
     uint i = 0;
     while (i<size){
-        if(DataReadyCount>10 && DataReady == true){
+        if(DataReadyCount>5 && DataReady == true){
             Data[i] = AfeGetData(readout);
             i++;
+            esp_task_wdt_reset();
             DataReady = false;
         }
     }
