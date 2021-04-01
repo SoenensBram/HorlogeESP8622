@@ -238,7 +238,7 @@ static esp_err_t Afe4404InitializePowerUp(){
     ets_delay_us(35000);
     ESP_ERROR_CHECK(gpio_set_level(ResetAfe,UINT32_MAX));
     vTaskDelay(100 / portTICK_RATE_MS);
-    I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
+    //I2cMasterAfe4404Write(Address[34], &Value[34]+1 ,3);
     return ESP_OK;
 }
 
@@ -338,3 +338,21 @@ static void AfeGetDataArray(uint16_t size, uint32_t *Data, enum Sensor readout){
     Afe4404PowerDown();
 }
 
+/**
+ * @brief reading data Array from AFE4404
+ *
+ * @param readout   This is the sensor that will be readout, these are specified in the h-File under the enum Sensor array
+ */
+static void serialContinuisPrint(enum Sensor readout){
+    Afe4404PowerUp();
+    uint32_t bob =0;
+    while(1){
+        if(DataReady == true){
+            bob = AfeGetData(readout);
+            //ESP_LOGI("bob","%u;",bob);
+            printf("$%d;\r\n", bob);
+            esp_task_wdt_reset();
+            DataReady = false;
+        }
+    }
+}

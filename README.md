@@ -39,3 +39,10 @@ Tunning the settings for the sensor so the readout data is more accurate.
 ### Implementing battery management
 We have chosen a chip for battery management. But we haven't implemented it yet.
 ### Implement Power management
+
+
+# Important comments
+## TIA Gain
+This amplification filter is esential for filtering out the high interfierace bit it can allsow affect the amplitude of the signal
+## I_DC_Offset
+This Value is important to change if the singal seems to clip, so that the adc can convert it but it allso affects the TIA-Gain
